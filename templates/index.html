@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Tampilan Home</title>
+    <link rel="icon" type="image/png" href="templates/icon.png"> <!-- Tambahkan icon gambar -->
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #e6f2ff; /* Ubah warna latar belakang menjadi biru muda */
+            margin: 0;
+            padding: 0;
+        }
+
+        header {
+            background-color: #333;
+            color: #fff;
+            padding: 20px;
+            text-align: center;
+        }
+
+        h1 {
+            margin: 0;
+            font-size: 24px;
+        }
+
+        main {
+            padding: 20px;
+            text-align: center;
+        }
+
+        p {
+            margin-bottom: 10px;
+        }
+
+        .button {
+            display: inline-block;
+            background-color: #4CAF50;
+            color: #fff;
+            padding: 10px 20px;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+
+        .button:hover {
+            background-color: #45a049;
+        }
+
+        .top-links {
+            position: absolute;
+            top: 10px;
+            right: 20px;
+        }
+
+        .top-links a {
+            margin-left: 10px;
+            color: #fff;
+            text-decoration: none;
+        }
+
+        #alert-message {
+            margin-top: 20px;
+        }
+
+        .corner-image {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            width: 50px;
+            height: 50px;
+        }
+    </style>
+    <script>
+        window.onload = function() {
+            var userRole = prompt("Pilih peran Anda:\n1. Admin\n2. Pasien");
+
+            if (userRole === "Admin" || userRole === "admin") {
+                showAlert("Anda masuk sebagai Admin");
+            } else if (userRole === "Pasien" || userRole === "pasien") {
+                showAlert("Anda masuk sebagai Pasien");
+            } else {
+                showAlert("Peran yang Anda pilih tidak valid");
+            }
+        };
+
+        function showAlert(message) {
+            var alertDiv = document.createElement("div");
+            alertDiv.setAttribute("id", "alert-message");
+            alertDiv.innerText = message;
+            document.querySelector("header").appendChild(alertDiv);
+        }
+    </script>
+</head>
+<body>
+    <header>
+        <h1>Selamat Datang di Halaman Home!</h1>
+        <h1>Halaman Home</h1>
+    <img src="gambar.jpg" alt="Gambar" width="300">
+        <img class="corner-image" src="logo.png" alt="Logo"> <!-- Tambahkan gambar logo di pojok -->
+        <div class="top-links">
+            <a href="about.html">About</a>
+            <a href="login.html">Login</a>
+            <a href="home.html">Home</a> <!-- Tambahkan tautan "Home" di sini -->
+        </div>
+    </header>
+    <main>
+        <h2>Informasi Terbaru</h2>
+        <p>Ini adalah contoh tampilan halaman Home.</p>
+        <p>Silakan pilih opsi berikut:</p>
+        <a href="#" class="button">Lihat Detail</a>
+        <img src="templates/icon.png" alt="templates/icon.png" width="300"> <!-- Tambahkan tag img untuk menampilkan gambar -->
+</main>
+</body>
+</html>
