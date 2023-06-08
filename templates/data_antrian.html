@@ -1,0 +1,183 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <title>Hello, world!</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <!-- Bulma CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.1/css/bulma.min.css">
+        <!-- JS -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f2f2f2;
+      margin: 0;
+    }
+
+    .sidebar {
+      width: 200px;
+      background-color: pink;
+      color: #fff;
+      padding: 20px;
+      box-sizing: border-box;
+      height: 100vh;
+      position: fixed;
+      top: 0;
+      left: 0;
+    }
+
+    .sidebar ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .sidebar li {
+      margin-bottom: 10px;
+    }
+
+    .sidebar a {
+      color: white;
+      text-decoration: none;
+    }
+
+    .content {
+      margin-left: 220px;
+      padding: 20px;
+    }
+
+    h1 {
+      margin-top: 0;
+      color: #333;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    th, td {
+      padding: 8px;
+      border-bottom: 1px solid #ddd;
+    }
+
+    th {
+      background-color: #f2f2f2;
+      font-weight: bold;
+      text-align: left;
+    }
+
+    td {
+      vertical-align: top;
+    }
+
+    .actions {
+      text-align: right;
+    }
+
+    .actions button {
+      padding: 5px 10px;
+      background-color: #333;
+      color: #fff;
+      border: none;
+      cursor: pointer;
+      margin-left: 5px;
+      border-radius: 3px;
+    }
+
+    /* CSS tambahan untuk mempercantik tampilan */
+    .sidebar {
+      overflow-y: auto;
+    }
+
+    .sidebar ul li a {
+      display: block;
+      padding: 10px;
+      background-color: #333;
+      color: #fff;
+      border-radius: 5px;
+      transition: background-color 0.3s ease;
+    }
+
+    .sidebar ul li a:hover {
+      background-color: #555;
+    }
+
+    .content {
+      background-color: #fff;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+      border-radius: 5px;
+    }
+
+    .menu-heading {
+      margin-top: 0;
+      font-size: 18px;
+    }
+
+    .menu-list {
+      margin-top: 10px;
+    }
+
+    .menu-list li {
+      margin-bottom: 5px;
+    }
+  </style>
+</head>
+<body>
+  <div class="sidebar">
+    <ul class="menu-list">
+      <li><a href="dashboard.html" target="_blank">Dashboard</a></li>
+      <li><a href="dokter.html" target="_blank">Dokter</a></li>
+      <li><a href="pasien.html" target="_blank">Pasien</a></li>
+      <li><a href="rekam.html" target="_blank">Rekam</a></li>
+    </ul>
+  </div>
+
+  <div class="content">
+    <h1>Data Antrian</h1>
+    <table>
+      <thead>
+        <tr>
+          <th>No. Antrian</th>
+          <th>Nama Pasien</th>
+          <th>Usia</th>
+          <th>Keluhan</th>
+          <th>Tanggal Kunjungan</th>
+          <th>Dokter</th>
+          <th>Aksi</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>001</td>
+          <td>John Doe</td>
+          <td>Dr. Smith</td>
+          <td>2023-06-01</td>
+          <td>2023-06-01</td>
+          <td>2023-06-01</td>
+          <td class="actions">
+            <a href="approve.html"><button>Approve</button></a>
+            <a href="reject.html"><button>Reject</button></a>
+          </td>
+        </tr>
+        <tr>
+          <td>002</td>
+          <td>Jane Smith</td>
+          <td>Dr. Johnson</td>
+          <td>2023-06-02</td>
+          <td>2023-06-02</td>
+          <td>2023-06-02</td>
+          <td class="actions">
+            <a href="approve.html"><button>Approve</button></a>
+            <a href="reject.html"><button>Reject</button></a>
+          </td>
+        </tr>
+        <!-- Tambahkan baris data antrian lainnya di sini -->
+      </tbody>
+    </table>
+  </div>
+</body>
+</html>
