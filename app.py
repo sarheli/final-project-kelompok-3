@@ -28,5 +28,14 @@ def login():
 def success():
     return render_template('success.html')
 
+@app.route('/super-admin/login')
+def login_admin():
+    return render_template('login_admin.html')
+    
+
+@app.route('/pasien/login')
+def login_pasien():
+    return render_template('login_pasien.html')
+
 if __name__ == '__main__':
     app.run(debug=True)

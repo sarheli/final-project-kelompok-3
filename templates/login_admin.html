@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Login</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f2f2f2;
+    }
+    
+    h1 {
+      text-align: center;
+    }
+    
+    .container {
+      max-width: 400px;
+      margin: 0 auto;
+      padding: 20px;
+      background-color: #fff;
+      border-radius: 5px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+    
+    .form-group {
+      margin-bottom: 15px;
+    }
+    
+    .form-group label {
+      display: block;
+      font-weight: bold;
+    }
+    
+    .form-group input {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+    
+    .form-group input[type="submit"] {
+      background-color: #4CAF50;
+      color: white;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+    
+    .form-group input[type="submit"]:hover {
+      background-color: #45a049;
+    }
+  </style>
+  <script>
+    function redirectToLogin() {
+      // Mengatur waktu penundaan sebelum pengalihan (dalam milidetik)
+      var delayInMilliseconds = 2000; // Contoh penundaan 2 detik
+
+      // Mengarahkan ke halaman login semula setelah penundaan
+      setTimeout(function() {
+        window.location.href = "login.html";
+      }, delayInMilliseconds);
+    }
+  </script>
+</head>
+<body>
+  <h1>Login Admin</h1>
+  <div class="container">
+    <form action="login_pasien.html" method="post" target="_blank" onsubmit="redirectToLogin()">
+      <div class="form-group">
+        <label for="username">Username</label>
+        <input type="text" id="username" name="username" placeholder="Username" required>
+      </div>
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input type="password" id="password" name="password" placeholder="Password" required>
+      </div>
+      <div class="form-group">
+        <input type="submit" value="Admin">
+      </div>
+    </form>
+  </div>
+</body>
+</html>
