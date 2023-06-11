@@ -51,6 +51,18 @@
 
         .container p {
             text-align: center;
+            margin-top: 20px;
+            font-size: 14px;
+        }
+
+        .register-link {
+            color: #007bff;
+            text-decoration: underline;
+            cursor: pointer;
+        }
+
+        .register-link:hover {
+            color: #0056b3;
         }
     </style>
 </head>
@@ -58,7 +70,7 @@
 <body>
     <div class="container">
         <h2>Login Klinik pasien</h2>
-        <form action="process_login.php" method="POST">
+        <form id="loginForm">
             <div class="form-group">
                 <label for="username">Username:</label>
                 <input type="text" id="username" name="username" class="form-control" required>
@@ -70,14 +82,14 @@
             </div>
 
             <input type="submit" value="Login" class="btn btn-primary">
-
-            <p>Belum punya akun? <a href="register.php">Daftar disini</a></p>
+            <p>Belum punya akun? <span id="registerLink" class="register-link">Daftar disini</span></p>
         </form>
     </div>
-
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script>
+        document.getElementById('registerLink').addEventListener('click', function() {
+            window.location.href = "registrasi_pasien.html";
+        });
+    </script>
 </body>
 
 </html>

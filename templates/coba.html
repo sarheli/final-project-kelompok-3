@@ -1,43 +1,135 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Three Columns</title>
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
   <style>
-    .col {
-      background-color: b;
-      padding: 20px;
-      border-radius: 5px;
-      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-      transition: transform 0.3s ease;
+    /* CSS untuk tabel */
+    table {
+      max-width: 600px;
+      margin: 0 auto;
+      border-collapse: collapse;
+      border: 1px solid #ddd;
     }
 
-    .col:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    th, td {
+      padding: 8px;
+      text-align: left;
+      border-bottom: 1px solid #ddd;
+    }
+
+    /* CSS untuk perubahan warna */
+    .highlight {
+      background-color: yellow;
+    }
+
+    /* CSS untuk tombol geser */
+    #btnMove {
+      margin-top: 10px;
+    }
+
+    /* CSS untuk daftar antrian tersembunyi */
+    #antrianList {
+      display: none;
+      margin-top: 10px;
     }
   </style>
 </head>
 <body>
-  <div class="container text-center">
-    <div class="row align-items-center">
-      <div class="col">
-        One of three columns
-      </div>
-      <div class="col">
-        One of three columns
-      </div>
-      <div class="col">
-        One of three columns
-      </div>
-    </div>
-  </div>
-  
-  <div class="grid text-center" style="--bs-columns: 4; --bs-gap: 5rem;">
-    <div class="g-col-2">.g-col-2</div>
-    <div class="g-col-2">.g-col-2</div>
-  </div>
-  
+  <table id="queueTable">
+    <thead>
+      <tr>
+        <th>No. Antrian</th>
+        <th>Nama Pasien</th>
+        <th>Status</th>
+        <th>Save</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>1</td>
+        <td>John Doe</td>
+        <td>Menunggu</td>
+        <td><button class="btnSave">Save</button></td>
+      </tr>
+      <tr>
+        <td>2</td>
+        <td>Jane Smith</td>
+        <td>Menunggu</td>
+        <td><button class="btnSave">Save</button></td>
+      </tr>
+      <tr>
+        <td>3</td>
+        <td>Michael Johnson</td>
+        <td>Menunggu</td>
+        <td><button class="btnSave">Save</button></td>
+      </tr>
+    </tbody>
+  </table>
 
+  <div id="antrianList">
+    <h2>Daftar Antrian</h2>
+    <ul id="list">
+      <li>No. Antrian: <span id="listNo"></span></li>
+      <li>Nama Pasien: <span id="listNama"></span></li>
+      <li>Status: <span id="listStatus"></span></li>
+    </ul>
+  </div>
+
+  <script>
+    // JavaScript untuk perubahan warna dan menyimpan data
+    var table = document.getElementById("queueTable");
+    var rows = table.getElementsByTagName("tr");
+
+    var antrianList = document.getElementById("antrianList");
+    var listNo = document.getElementById("listNo");
+    var listNama = document.getElementById("listNama");
+    var listStatus = document.getElementById("listStatus");
+
+    for (var i = 1; i < rows.length; i++) {
+      rows[i].onclick = function () {
+        // Menghapus warna latar belakang pada baris yang terpilih
+        if (this.className === "highlight") {
+          this.className = "";
+        } else {
+          // Menambahkan warna latar belakang pada baris yang terpilih
+          this.className = "highlight";
+        }
+
+        // Menampilkan daftar antrian
+        var no = this.cells[0].textContent;
+        var nama = this.cells[1].textContent;
+        var status = this.cells[2].textContent;
+
+        listNo.textContent = no;
+        listNama.textContent = nama;
+        listStatus.textContent = status;
+
+        antrianList.style.display = "block";
+      };
+
+      rows[i].lastElementChild.onclick = function (e) {
+        e.stopPropagation();
+        var row = this.parentNode.parentNode;
+        var nextRow = row.nextSibling;
+        if (nextRow && nextRow.tagName === 'TR') {
+          table.tBodies[0].insertBefore(row, nextRow.nextSibling);
+        }
+      };
+    }
+
+    var btnSave = document.getElementsByClassName("btnSave");
+
+    for (var i = 0; i < btnSave.length; i++) {
+      btnSave[i].onclick = function (e) {
+        e.stopPropagation();
+        var row = this.parentNode.parentNode;
+        var no = row.cells[0].textContent;
+        var nama = row.cells[1].textContent;
+        var status = row.cells[2].textContent;
+        // Simpan data ke tempat penyimpanan yang sesuai, seperti database atau variabel JavaScript
+        console.log("Data Tersimpan:", no, nama, status);
+        alert("Data telah disimpan!");
+      };
+    }
+  </script>
 </body>
 </html>

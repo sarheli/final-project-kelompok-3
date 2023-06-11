@@ -37,5 +37,9 @@ def login_admin():
 def login_pasien():
     return render_template('login_pasien.html')
 
+@app.route('/registrasi/pasien')
+def registrasi_pasien():
+    return render_template('registrasi_pasien.html')
+
 if __name__ == '__main__':
     app.run(debug=True)

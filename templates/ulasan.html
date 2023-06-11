@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Form Ulasan dan Rating</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f2f2f2;
+    }
+
+    .container {
+      max-width: 400px;
+      margin: 0 auto;
+      padding: 40px;
+      background-color: #fff;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      border-radius: 5px;
+      margin-top: 100px;
+    }
+
+    h1 {
+      text-align: center;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    .form-group label {
+      font-weight: bold;
+    }
+
+    .error-message {
+      color: red;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Ulasan dan Rating</h1>
+    <form action="/submit_review" method="POST">
+      <div class="form-group">
+        <label for="nama">Nama</label>
+        <input type="text" class="form-control" id="nama" name="nama" required>
+      </div>
+      <div class="form-group">
+        <label for="layanan">Pelayanan</label>
+        <select class="form-control" id="layanan" name="layanan" required>
+          <option value="">-- Pilih Rating --</option>
+          <option value="1">Buruk</option>
+          <option value="2">Cukup</option>
+          <option value="3">Baik</option>
+          <option value="4">Sangat Baik</option>
+          <option value="5">Luuar Biasa</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="website">Website</label>
+        <input type="text" class="form-control" id="website" name="website" required>
+      </div>
+      <div class="form-group">
+        <label for="ulasan">Ulasan</label>
+        <textarea class="form-control" id="ulasan" name="ulasan" required></textarea>
+      </div>
+      <div class="form-group">
+        <button type="submit" class="btn btn-primary">Submit</button>
+      </div>
+      {% if error_message %}
+      <p class="error-message">{{ error_message }}</p>
+      {% endif %}
+    </form>
+  </div>
+</body>
+</html>

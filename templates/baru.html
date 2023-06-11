@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
+    <title>Hello, modularity!</title>
+  <style>
+    /* Tambahkan CSS tambahan jika diperlukan */
+  </style>
+</head>
+<body>
+  <div class="p-3 text-primary-emphasis bg-primary-subtle border border-primary-subtle rounded-3">
+    Data antrian
+  </div>
+  <div class="container">
+    <table class="table table-striped">
+      <thead class="thead-dark">
+        <tr>
+          <th scope="col">No. Antrian</th>
+          <th scope="col">Nama Pasien</th>
+          <th scope="col">Dokter</th>
+          <th scope="col">Tanggal Kunjungan</th>
+          <th scope="col">Aksi</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <th scope="row">001</th>
+          <td>John Doe</td>
+          <td>Dr. Smith</td>
+          <td>2023-06-01</td>
+          <td class="actions">
+            <button class="btn btn-success btn-approve">Approve</button>
+            <button class="btn btn-danger btn-reject">Reject</button>
+          </td>
+        </tr>
+        <tr>
+          <th scope="row">002</th>
+          <td>Jane Smith</td>
+          <td>Dr. Johnson</td>
+          <td>2023-06-02</td>
+          <td class="actions">
+            <button class="btn btn-success btn-approve">Approve</button>
+            <button class="btn btn-danger btn-reject">Reject</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+  <script>
+    // Menangkap tombol approve dan reject
+    var approveButtons = document.querySelectorAll(".btn-approve");
+    var rejectButtons = document.querySelectorAll(".btn-reject");
+
+    // Menambahkan event listener untuk setiap tombol approve
+    approveButtons.forEach(function(button) {
+      button.addEventListener("click", function() {
+        // Menampilkan pop-up konfirmasi
+        if (confirm("Apakah Anda yakin ingin menyetujui antrian ini?")) {
+          // Mengirim data ke server untuk disimpan (gunakan AJAX atau form submit)
+          // Di sini, kita hanya menampilkan pesan alert sebagai contoh
+          alert("Data disimpan!");
+        }
+      });
+    });
+
+    // Menambahkan event listener untuk setiap tombol reject
+    rejectButtons.forEach(function(button) {
+      button.addEventListener("click", function() {
+        // Tidak melakukan apa pun karena data tidak perlu disimpan
+      });
+    });
+  </script>
+</body>
+</html>
