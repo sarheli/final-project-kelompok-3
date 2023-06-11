@@ -37,5 +37,10 @@ def login_admin():
 def login_pasien():
     return render_template('login_pasien.html')
 
+@app.route('/dashboard')
+def dashboard():
+    return render_template('dashboard.html')
+
 if __name__ == '__main__':
-    app.run(debug=True)
+    #DEBUG is SET to TRUE. CHANGE FOR PROD
+    app.run('0.0.0.0',port=5000,debug=True)
