@@ -1,30 +1,72 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Klinik XYZ - Registrasi Pasien</title>
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link href='https://unpkg.com/boxicons@2.0.9/css/boxicons.min.css' rel='stylesheet'>
+	<!-- bootrap css -->
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>
+  <title>Registrasi pasien</title>
   <style>
     body {
-      font-family: Arial, sans-serif;
-      background-color: #f2f2f2;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f9f9f9;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
     }
 
     .container {
-      max-width: 400px;
-      margin: 0 auto;
-      padding: 40px;
+      width: 400px;
       background-color: #fff;
+      padding: 40px;
       box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
       border-radius: 5px;
-      margin-top: 100px;
     }
 
     h1 {
       text-align: center;
+      margin-bottom: 30px;
+      color: #333;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 8px;
+      color: #555;
+    }
+
+    .form-control {
+      width: 100%;
+      padding: 10px;
+      font-size: 16px;
+      border-radius: 5px;
+      border: 1px solid #ddd;
     }
 
     .form-group {
       margin-bottom: 20px;
+    }
+
+    .btn-primary {
+      display: block;
+      width: 100%;
+      padding: 12px;
+      font-size: 16px;
+      border-radius: 5px;
+      border: none;
+      background-color: #007bff;
+      color: #fff;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    .btn-primary:hover {
+      background-color: #0056b3;
     }
 
     .error-message {
@@ -36,15 +78,17 @@
 <body>
   <div class="container">
     <h1>Registrasi Pasien</h1>
-    <form action="/registrasi_pasien" method="POST">
+    <form id="registration-form" action="/registrasi_pasien" method="POST">
       <div class="form-group">
         <label for="nama">Nama</label>
         <input type="text" class="form-control" id="nama" name="nama" required>
       </div>
+
       <div class="form-group">
-        <label for="alamat">Alamat</label>
-        <input type="text" class="form-control" id="alamat" name="alamat" required>
+        <label for="username">Username</label>
+        <input type="text" class="form-control" id="username" name="username" required>
       </div>
+
       <div class="form-group">
         <label for="telepon">Telepon</label>
         <input type="text" class="form-control" id="telepon" name="telepon" required>
@@ -53,12 +97,13 @@
         <label for="email">Email</label>
         <input type="email" class="form-control" id="email" name="email" required>
       </div>
-      <div class="form-group">
-        <label for="username">Username</label>
-        <input type="text" class="form-control" id="username" name="username" required>
-      </div>
+      
       <div class="form-group">
         <label for="password">Password</label>
+        <input type="password" class="form-control" id="password" name="password" required>
+      </div>
+      <div class="form-group">
+        <label for="password">Re-type Password</label>
         <input type="password" class="form-control" id="password" name="password" required>
       </div>
       <div class="form-group">
@@ -69,5 +114,32 @@
       {% endif %}
     </form>
   </div>
+
+  <script src="https://code.jquery.com/jquery-3.6.4.js" integrity="sha256-a9jBBRygX1Bh5lt8GZjXDzyOB+bWve9EiO7tROUtj/E=" crossorigin="anonymous"></script>
+  <script>
+    $(document).ready(function() {
+      $("#registration-form").submit(function(e) {
+        e.preventDefault(); // Prevent form submission
+
+        // Serialize form data
+        var formData = $(this).serialize();
+
+        // Make an AJAX request
+        $.ajax({
+          type: "POST",
+          url: "/registrasi_pasien", // URL to submit the form data to
+          data: formData,
+          success: function(response) {
+            // Handle success response
+            alert("Registration successful!");
+          },
+          error: function(xhr, status, error) {
+            // Handle error response
+            alert("Error occurred during registration.");
+          }
+        });
+      });
+    });
+  </script>
 </body>
 </html>

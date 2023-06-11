@@ -1,10 +1,11 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Bootstrap demo</title>
-
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Halaman Riwayat Kunjungan</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -42,94 +43,107 @@
       text-align: left;
     }
 
-  </style>
-  <script>
-@import "bootstrap/scss/bootstrap";
-$utilities: map-merge(
-  $utilities,
-  (
-    "cursor": (
-      property: cursor,
-      class: cursor,
-      responsive: true,
-      values: auto pointer grab,
-    )
-  )
-);
-$box-shadow:                  0 .5rem 1rem rgba($black, .15);
-$box-shadow-sm:               0 .125rem .25rem rgba($black, .075);
-$box-shadow-lg:               0 1rem 3rem rgba($black, .175);
-$box-shadow-inset:            inset 0 1px 2px rgba($black, .075);
+    .review-section {
+      margin-top: 20px;
+    }
 
-"shadow": (
-  property: box-shadow,
-  class: shadow,
-  values: (
-    null: $box-shadow,
-    sm: $box-shadow-sm,
-    lg: $box-shadow-lg,
-    none: none,
-  )
-),
+    .review-section textarea {
+      width: 100%;
+      height: 80px;
+      resize: vertical;
+    }
+  </style>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script>
+    $(document).ready(function() {
+      // Get the form and review textarea
+      var form = $("#reviewForm");
+      var reviewTextarea = $("#reviewTextarea");
+
+      // Add event listener to the form submission
+      form.on("submit", function(event) {
+        event.preventDefault(); // Prevent the form from submitting
+
+        // Check if the review textarea is filled
+        if (reviewTextarea.val().trim() !== "") {
+          // Get the selected doctor name and diagnosis
+          var selectedDoctor = $("#doctorSelect").val();
+          var diagnosis = $("#diagnosisInput").val();
+          var review = reviewTextarea.val();
+
+          // Perform Ajax request
+          $.ajax({
+            url: "/save_review",
+            method: "POST",
+            data: {
+              doctor: selectedDoctor,
+              diagnosis: diagnosis,
+              review: review
+            },
+            success: function(response) {
+              // Handle the response from the server
+              if (response.success) {
+                alert("Review saved!");
+              } else {
+                alert("Failed to save the review. Please try again.");
+              }
+            },
+            error: function() {
+              alert("An error occurred. Please try again.");
+            }
+          });
+        }
+      });
+    });
   </script>
 </head>
 <body>
-   <div>
-    <ul class="nav nav-pills nav-fill gap-2 p-1 small bg-primary rounded-5 shadow-sm" id="pillNav2" role="tablist" style="--bs-nav-link-color: var(--bs-white); --bs-nav-pills-link-active-color: var(--bs-primary); --bs-nav-pills-link-active-bg: var(--bs-white);">
-    <li class="nav-item" role="presentation">
-      <button class="nav-link active rounded-5" id="home-tab2" data-bs-toggle="tab" type="button" role="tab" aria-selected="true">Home</button>
-    </li>
-    <li class="nav-item" role="presentation">
-      <button class="nav-link rounded-5" id="profile-tab2" data-bs-toggle="tab" type="button" role="tab" aria-selected="false">Profile</button>
-    </li>
-    <li class="nav-item" role="presentation">
-      <button class="nav-link rounded-5" id="contact-tab2" data-bs-toggle="tab" type="button" role="tab" aria-selected="false">Contact</button>
-    </li>
-  </ul>
-</div>
-<div class="dropdown">
-  <button class="btn btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-    Dropdown
-  </button>
-  <ul class="dropdown-menu">
-    <li><button class="dropdown-item" type="button">Dropdown item</button></li>
-    <li><button class="dropdown-item" type="button">Dropdown item</button></li>
-    <li><button class="dropdown-item" type="button">Dropdown item</button></li>
-  </ul>
-</div>
-
   <div class="container">
     <h1>Riwayat Kunjungan</h1>
-    <table>
+    <table class="table">
       <thead>
         <tr>
-          <th>No.</th>
-          <th>Tanggal Kunjungan</th>
-          <th>Nama Pasien</th>
-          <th>Dokter</th>
+          <th scope="col">No.</th>
+          <th scope="col">Dokter</th>
+          <th scope="col">Keluhan</th>
+          <th scope="col">Diagnosa</th>
+          <th scope="col">Obat</th>
+          <th scope="col">Ulasan</th>
         </tr>
       </thead>
       <tbody>
         <tr>
-          <td>1</td>
-          <td>2023-06-01</td>
-          <td>John Doe</td>
-          <td>Dr. Smith</td>
+          <th scope="row">1</th>
+          <td>Dr. Sarheli</td>
+          <td>Fever</td>
+          <td>Flu</td>
+          <td>Paracetamol</td>
+          <td>
+            <div class="review-section">
+              <form id="reviewForm">
+                <div class="form-group">
+                  <select id="doctorSelect" class="form-control" required>
+                    <option value="">Pilih Dokter</option>
+                    <option value="Dr. Smith">Dr. Sarheli</option>
+                    <option value="Dr. Johnson">Dr. aqli</option>
+                    <option value="Dr. Anderson">Dr. erlang</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <input type="text" id="diagnosisInput" class="form-control" placeholder="Nama" required>
+                </div>
+                <div class="form-group">
+                  <textarea id="reviewTextarea" class="form-control" placeholder="Ulasan" required></textarea>
+                </div>
+                <div class="form-group">
+                  <button type="submit" class="btn btn-primary">Simpan</button>
+                </div>
+              </form>
+            </div>
+          </td>
         </tr>
-        <tr>
-          <td>2</td>
-          <td>2023-05-25</td>
-          <td>Jane Smith</td>
-          <td>Dr. Johnson</td>
-        </tr>
-        <!-- Tambahkan baris riwayat kunjungan lainnya di sini -->
       </tbody>
     </table>
   </div>
-  <div class="shadow-none p-3 mb-5 bg-body-tertiary rounded">No shadow</div>
-  <div class="shadow-sm p-3 mb-5 bg-body-tertiary rounded">Small shadow</div>
-  <div class="shadow p-3 mb-5 bg-body-tertiary rounded">Regular shadow</div>
-  <div class="shadow-lg p-3 mb-5 bg-body-tertiary rounded">Larger shadow</div>
-  
 </body>
 </html>
