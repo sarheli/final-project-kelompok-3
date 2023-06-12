@@ -2,9 +2,8 @@ from flask import Flask, render_template, jsonify, request, redirect, url_for
 from pymongo import MongoClient
 import jwt
 import datetime
-import hashlib
-from werkzeug.utils import secure_filename
 from datetime import datetime, timedelta
+import hashlib
 
 app = Flask(__name__)
 app.config["TEMPLATES_AUTO_RELOAD"] = True
@@ -13,7 +12,7 @@ app.config["UPLOAD_FOLDER"] = "./static/profile_pics"
 SECRET_KEY = "PROJECTFINAL"
 TOKEN_KEY = "mytoken"
 
-MONGODB_CONNECTION_STRING = "mongodb+srv://finalproject1290:Final123@@cluster0.jyp22vw.mongodb.net/?retryWrites=true&w=majority"
+MONGODB_CONNECTION_STRING = "mongodb+srv://finalproject387:finalproject@cluster0.86upttf.mongodb.net/?retryWrites=true&w=majority"
 client = MongoClient(MONGODB_CONNECTION_STRING)
 db = client.dbfinal
 
@@ -30,6 +29,14 @@ def login_admin():
 @app.route('/pasien/login')
 def login_pasien():
     return render_template('login_pasien.html')
+
+@app.route('/dashboard')
+def dashboard():
+    return render_template('dashboard.html')
+
+@app.route('/dashboard/data_dokter')
+def dokter():
+    return render_template('data_dokter.html')
 
 if __name__ == '__main__':
     #DEBUG is SET to TRUE. CHANGE FOR PROD
