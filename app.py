@@ -16,10 +16,14 @@ MONGODB_CONNECTION_STRING = "mongodb+srv://finalproject387:finalproject@cluster0
 client = MongoClient(MONGODB_CONNECTION_STRING)
 db = client.dbfinal
 
+
 @app.route('/')
 def home():
     return render_template('index.html')
 
+@app.route('/about')
+def about():
+    return render_template('about.html')
 
 @app.route('/super-admin/login')
 def login_admin():
