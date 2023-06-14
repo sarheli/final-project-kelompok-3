@@ -1,46 +1,85 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Form Ulasan dan Rating</title>
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background-color: #f2f2f2;
-    }
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ulasan dan Rating</title>
+    <script src="https://code.jquery.com/jquery-3.6.4.js" integrity="sha256-a9jBBRygX1Bh5lt8GZjXDzyOB+bWve9EiO7tROUtj/E=" crossorigin="anonymous"></script>
+    <style>
+        body {
+          font-family: Arial, sans-serif;
+          background-color: #f2f2f2;
+        }
 
-    .container {
-      max-width: 400px;
-      margin: 0 auto;
-      padding: 40px;
-      background-color: #fff;
-      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-      border-radius: 5px;
-      margin-top: 100px;
-    }
+        .container {
+          max-width: 400px;
+          margin: 0 auto;
+          padding: 40px;
+          background-color: #fff;
+          box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+          border-radius: 5px;
+          margin-top: 100px;
+        }
 
-    h1 {
-      text-align: center;
-    }
+        h1 {
+          text-align: center;
+          color: #333;
+          text-transform: uppercase;
+          letter-spacing: 2px;
+        }
 
-    .form-group {
-      margin-bottom: 20px;
-    }
+        .form-group {
+          margin-bottom: 20px;
+        }
 
-    .form-group label {
-      font-weight: bold;
-    }
+        .form-group label {
+          font-weight: bold;
+          color: #333;
+        }
 
-    .error-message {
-      color: red;
-      margin-top: 10px;
-    }
-  </style>
+        .form-control {
+          width: 100%;
+          padding: 10px;
+          border: 1px solid #ccc;
+          border-radius: 4px;
+          font-size: 14px;
+          color: #333;
+        }
+
+        .form-control:focus {
+          outline: none;
+          border-color: #66afe9;
+          box-shadow: 0 0 8px rgba(102, 175, 233, 0.6);
+        }
+
+        .error-message {
+          color: red;
+          margin-top: 10px;
+        }
+
+        .btn-primary {
+          display: inline-block;
+          padding: 8px 16px;
+          font-size: 14px;
+          font-weight: bold;
+          color: #fff;
+          background-color: #337ab7;
+          border: 1px solid #2e6da4;
+          border-radius: 4px;
+          cursor: pointer;
+        }
+
+        .btn-primary:hover {
+          background-color: #286090;
+          border-color: #204d74;
+        }
+    </style>
 </head>
 <body>
   <div class="container">
     <h1>Ulasan dan Rating</h1>
-    <form action="/submit_review" method="POST">
+    <form id="reviewForm">
       <div class="form-group">
         <label for="nama">Nama</label>
         <input type="text" class="form-control" id="nama" name="nama" required>
@@ -53,13 +92,10 @@
           <option value="2">Cukup</option>
           <option value="3">Baik</option>
           <option value="4">Sangat Baik</option>
-          <option value="5">Luuar Biasa</option>
+          <option value="5">Luar Biasa</option>
         </select>
       </div>
-      <div class="form-group">
-        <label for="website">Website</label>
-        <input type="text" class="form-control" id="website" name="website" required>
-      </div>
+      
       <div class="form-group">
         <label for="ulasan">Ulasan</label>
         <textarea class="form-control" id="ulasan" name="ulasan" required></textarea>
@@ -67,10 +103,40 @@
       <div class="form-group">
         <button type="submit" class="btn btn-primary">Submit</button>
       </div>
-      {% if error_message %}
-      <p class="error-message">{{ error_message }}</p>
-      {% endif %}
+      <p class="error-message" id="errorMessage"></p>
     </form>
   </div>
+
+  <script>
+    $(document).ready(function() {
+      // Form submission handler
+      $("#reviewForm").on("submit", function(e) {
+        e.preventDefault();
+        var form = $(this);
+        var errorMessage = $("#errorMessage");
+
+        // Serialize the form data
+        var formData = form.serialize();
+
+        // Perform AJAX request
+        $.ajax({
+          type: "POST",
+          url: "/save_review", // Replace with the actual endpoint to handle the form submission
+          data: formData,
+          success: function(response) {
+            // Clear the form inputs
+            form.trigger("reset");
+
+            // Display success message
+            errorMessage.text("Review saved successfully.").css("color", "green");
+          },
+          error: function(xhr, status, error) {
+            // Display error message
+            errorMessage.text("An error occurred while saving the review.").css("color", "red");
+          }
+        });
+      });
+    });
+  </script>
 </body>
 </html>
