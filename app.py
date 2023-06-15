@@ -64,6 +64,10 @@ def dashboard():
 def dokter():
     return render_template('data_dokter.html')
 
+@app.route('/dashboard/rekam_medis')
+def medis():
+    return render_template('rekam_medis.html')
+
 if __name__ == '__main__':
     #DEBUG is SET to TRUE. CHANGE FOR PROD
     app.run('0.0.0.0',port=5000,debug=True)
