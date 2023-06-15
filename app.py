@@ -1,20 +1,27 @@
 from flask import Flask, render_template, jsonify, request, redirect, url_for
+from flask import Flask, render_template, request, redirect, session, url_for
 from pymongo import MongoClient
+from flask_session import Session
 import jwt
 import datetime
 from datetime import datetime, timedelta
 import hashlib
 
 app = Flask(__name__)
-app.config["TEMPLATES_AUTO_RELOAD"] = True
-app.config["UPLOAD_FOLDER"] = "./static/profile_pics"
+app.config['SECRET_KEY'] = 'your_secret_key'  # Ganti dengan secret key yang aman
+app.config['SESSION_TYPE'] = 'filesystem'
+Session(app)
+
+# app.config["TEMPLATES_AUTO_RELOAD"] = True
+# app.config["UPLOAD_FOLDER"] = "./static/profile_pics"
 
 SECRET_KEY = "PROJECTFINAL"
 TOKEN_KEY = "mytoken"
 
-MONGODB_CONNECTION_STRING = "mongodb+srv://finalproject387:finalproject@cluster0.86upttf.mongodb.net/?retryWrites=true&w=majority"
-client = MongoClient(MONGODB_CONNECTION_STRING)
-db = client.dbfinal
+client = MongoClient('mongodb+srv://SAR11:SARHELI@cluster0.c4knhwy.mongodb.net/?retryWrites=true&w=majority')
+db = client['FINAL3']  # Ganti "nama_database" dengan nama database yang diinginkan
+collection = db['kelompok3']  # Ganti "nama_koleksi" dengan nama koleksi yang diinginkan
+
 
 
 @app.route('/')
@@ -30,35 +37,41 @@ def login_admin():
     return render_template('login_admin.html')
     
 
-@app.route('/pasien/login')
+@app.route('/pasien/login', methods=['GET', 'POST'])
 def login_pasien():
-   
-        return render_template('login_pasien.html')
+    if request.method == 'POST':
+        username = request.form['username']
+        password = request.form['password']
 
+        user = collection.find_one({'username': username, 'password': password})
 
-@app.route('/pasien/login/registrasi/Pasien', methods=['GET', 'POST'])
-def registrasi_pasien():
-    # nama = request.form['nama']
-    # username = request.form['username']
-    # telpon = request.form['telpon']
-    # password = request.form['password']
-    # retype_password = request.form['retype_password']
-    # alamat = request.form['alamat']
+        if user:
+            session['username'] = username
+            return redirect(url_for('/dashboard'))
+        else:
+            return 'Login failed. Invalid username or password.'
 
-    # # Lakukan validasi data
-    # if password != retype_password:
-    #     return 'Konfirmasi password tidak sesuai'
+    return render_template('login_pasien.html')
 
-    # # Simpan data ke basis data atau lakukan tindakan lainnya
+@app.route('/pasien/login/registrasi/Pasien', methods=['GET','POST'])
+def register_pasien():
+    if request.method == 'POST':
+        # Menerima data yang dikirim melalui POST request
+        username = request.form.get('username_give')
+        password = request.form.get('password_give')
 
-    # return 'Registrasi berhasil! Selamat datang, ' + nama
+        # Lakukan proses registrasi dengan menyimpan data ke MongoDB
+        data = {
+            'username': username,
+            'password': password
+        }
+        collection.insert_one(data)
 
-    
-    return render_template('registrasi_pasien.html')
+        # Setelah berhasil mendaftar, arahkan pengguna ke halaman login
+        return redirect('/pasien/login')
+    else:
+        return render_template('registrasi_pasien.html')
 
-@app.route('/dashboard')
-def dashboard():
-    return render_template('dashboard.html')
 
 @app.route('/dashboard/data_dokter')
 def dokter():
@@ -67,6 +80,14 @@ def dokter():
 @app.route('/dashboard/rekam_medis')
 def medis():
     return render_template('rekam_medis.html')
+
+@app.route('/dashboard')
+def dashboard():
+    if 'username' in session:
+        username = session['username']
+        return render_template('dashboard.html', username=username)
+    
+    return redirect('/login/pasien')
 
 if __name__ == '__main__':
     #DEBUG is SET to TRUE. CHANGE FOR PROD

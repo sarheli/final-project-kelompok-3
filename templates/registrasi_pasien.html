@@ -6,6 +6,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://code.jquery.com/jquery-3.6.4.js" 
     integrity="sha256-a9jBBRygX1Bh5lt8GZjXDzyOB+bWve9EiO7tROUtj/E=" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.1.9/dist/sweetalert2.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.1.9/dist/sweetalert2.min.css">
+
 
   <title>Registrasi Pasien</title>
   <style>
@@ -124,33 +127,52 @@
   <div id="registrationResult" class="registration-result"></div>
 
   <div class="login-link">
-    <p>Sudah punya akun? <a href="#">Login sekarang</a></p>
+    <p>Sudah punya akun? <a href="/pasien/login">Login sekarang</a></p>
   </div>
 
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script>
-    // Menambahkan event listener ke form saat tombol "Daftar" ditekan
-    $('#registrationForm').on('submit', function(event) {
+  $(document).ready(function() {
+    $('#registrationForm').submit(function(event) {
       event.preventDefault(); // Menghentikan pengiriman data form secara langsung
 
-      // Mengirimkan data registrasi ke server menggunakan Ajax
-    $.ajax({
-          type: "POST",
-          url: "/sign_in",
-          data: {
-            username_give: username,
-            password_give: password,
-          },
-          success: function (response) {
-            if (response["result"] === "success") {
-              $.cookie("mytoken", response["token"], { path: "/" });
-              window.location.replace("/");
-            } else {
-              alert(response["msg"]);
-            }
-          },
-        });
-      }
-  </script>
+      var username = $('#username').val();
+      var password = $('#password').val();
+
+      $.ajax({
+        url: '/pasien/login/registrasi/Pasien',
+        method: 'POST',
+        data: {
+          username_give: username,
+          password_give: password
+        },
+        success: function(response) {
+          if (response === "success") {
+            Swal.fire({
+              icon: 'success',
+              title: 'Registrasi Berhasil!',
+              text: 'Selamat, registrasi Anda berhasil!',
+              confirmButtonText: 'OK'
+            }).then(function() {
+              window.location.href = "/pasien/login"; // Ganti dengan halaman tujuan setelah registrasi sukses
+            });
+          } else {
+            Swal.fire({
+              icon: 'error',
+              title: 'Registrasi Gagal',
+              text: 'Registrasi gagal. Silakan coba lagi.',
+              confirmButtonText: 'OK'
+            });
+          }
+        },
+        error: function(xhr, status, error) {
+          console.error(error);
+        }
+      });
+    });
+  });
+</script>
+
+    
 </body>
 </html>
