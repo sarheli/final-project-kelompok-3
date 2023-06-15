@@ -32,7 +32,9 @@ def login_admin():
 
 @app.route('/pasien/login')
 def login_pasien():
-    return render_template('login_pasien.html')
+   
+        return render_template('login_pasien.html')
+
 
 @app.route('/pasien/login/registrasi/Pasien', methods=['GET', 'POST'])
 def registrasi_pasien():

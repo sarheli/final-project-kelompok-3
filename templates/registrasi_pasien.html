@@ -14,6 +14,8 @@
       background-color: #f2f2f2;
       margin: 0;
       padding: 20px;
+      background-color:powderblue;
+      background-image: url("https://cdn.wallpapersafari.com/24/69/qrgVOf.jpg");
     }
 
     h1 {
@@ -132,18 +134,23 @@
       event.preventDefault(); // Menghentikan pengiriman data form secara langsung
 
       // Mengirimkan data registrasi ke server menggunakan Ajax
-      $.ajax({
-        url: $(this).attr('action'),
-        type: $(this).attr('method'),
-        data: $(this).serialize(),
-        success: function(response) {
-          $('#registrationResult').html(response);
-        },
-        error: function() {
-          $('#registrationResult').html('Terjadi kesalahan. Silakan coba lagi.');
-        }
-      });
-    });
+    $.ajax({
+          type: "POST",
+          url: "/sign_in",
+          data: {
+            username_give: username,
+            password_give: password,
+          },
+          success: function (response) {
+            if (response["result"] === "success") {
+              $.cookie("mytoken", response["token"], { path: "/" });
+              window.location.replace("/");
+            } else {
+              alert(response["msg"]);
+            }
+          },
+        });
+      }
   </script>
 </body>
 </html>
