@@ -8,20 +8,18 @@ from datetime import datetime, timedelta
 import hashlib
 
 app = Flask(__name__)
-app.config['SECRET_KEY'] = 'your_secret_key'  # Ganti dengan secret key yang aman
-app.config['SESSION_TYPE'] = 'filesystem'
 Session(app)
 
-# app.config["TEMPLATES_AUTO_RELOAD"] = True
-# app.config["UPLOAD_FOLDER"] = "./static/profile_pics"
+client = MongoClient('mongodb+srv://SAR11:SARHELI@cluster0.c4knhwy.mongodb.net/?retryWrites=true&w=majority')
+db = client['FINAL3']  
+collection = db['kelompok3'] 
+
+app.config["TEMPLATES_AUTO_RELOAD"] = True
+app.config["UPLOAD_FOLDER"] = "./static/profile_pics"
+
 
 SECRET_KEY = "PROJECTFINAL"
 TOKEN_KEY = "mytoken"
-
-client = MongoClient('mongodb+srv://SAR11:SARHELI@cluster0.c4knhwy.mongodb.net/?retryWrites=true&w=majority')
-db = client['FINAL3']  # Ganti "nama_database" dengan nama database yang diinginkan
-collection = db['kelompok3']  # Ganti "nama_koleksi" dengan nama koleksi yang diinginkan
-
 
 
 @app.route('/')
