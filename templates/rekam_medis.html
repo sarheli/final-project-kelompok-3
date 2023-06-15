@@ -7,7 +7,7 @@
 	<!-- bootrap css -->
 	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
 	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>
-	<link rel="stylesheet" href="static/style.css">
+	<link rel="stylesheet" href="/static/style.css">
 	<title>AdminSite</title>
 </head>
 <body>
@@ -26,7 +26,7 @@
 				</ul>
 			</li>
 			<li><a href="/dashboard/data_dokter"><i class='bx bxs-user icon' ></i> Dokter</a></li>
-			<li><a href="#"><i class='bx bxs-video icon' ></i> Rekam Medis</a></li>
+			<li><a href="/dashboard/rekam_medis"><i class='bx bxs-video icon' ></i> Rekam Medis</a></li>
 		</ul>
 		
 	</section>
@@ -62,42 +62,35 @@
 				<li class="divider">/</li>
 				<li><a href="#" class="active">Dashboard</a></li>
 			</ul>
-			<div class="info-data">
-				<div class="card">
-					<div class="head">
-						<div>
-							<h2>7</h2>
-							<p>Antrian</p>
-						</div>
-					</div>
-				</div>
-				<div class="card">
-					<div class="head">
-						<div>
-							<h2>2</h2>
-							<p>pasien</p>
-						</div>
-						
-					</div>
-					
-				</div>
-				<div class="card">
-					<div class="head">
-						<div>
-							<h2>2</h2>
-							<p>Dokter</p>
-						</div>
-						
-					</div>
-					
-				</div>
-				
-				
-			</div>
+			
 			<div class="data">
 				<div class="content-data">
 					<div class="head">
-						
+						<table class="table">
+                            <thead>
+                              <tr>
+                                <th scope="col">No</th>
+                                <th scope="col">Nama </th>
+                                <th scope="col">Usia</th>
+                                <th scope="col">Jenis Kelamin</th>
+                                <th scope="col">Keluhan</th>
+                                <th scope="col">Tanggal Kunjungan</th>
+                                <th scope="col">Dokter</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              <tr>
+                                <th scope="row">1</th>
+                                <td>Rizki</td>
+                                <td>21</td>
+                                <td>Laki-Laki</td>
+                                <td>migren</td>
+                                <td>12-12-12</td>
+                                <td>Dokter umum </td>
+                                
+                              </tr>
+                            </tbody>
+                          </table>
 					
 				</div>
 			</div>
@@ -132,6 +125,6 @@
 	<!-- NAVBAR -->
 
 	<script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
-	<script src="static/script.js"></script>
+	<script src="/static/script.js"></script>
 </body>
 </html>
