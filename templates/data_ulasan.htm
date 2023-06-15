@@ -10,6 +10,7 @@
         body {
           font-family: Arial, sans-serif;
           background-color: #f2f2f2;
+          background-image: url("https://cdn.wallpapersafari.com/24/69/qrgVOf.jpg");
         }
 
         .container {
@@ -96,10 +97,6 @@
         </select>
       </div>
       <div class="form-group">
-        <label for="website">Website</label>
-        <input type="text" class="form-control" id="website" name="website" required>
-      </div>
-      <div class="form-group">
         <label for="ulasan">Ulasan</label>
         <textarea class="form-control" id="ulasan" name="ulasan" required></textarea>
       </div>
@@ -124,7 +121,7 @@
         // Perform AJAX request
         $.ajax({
           type: "POST",
-          url: "/save_review", // Replace with the actual endpoint to handle the form submission
+          url: "/", // Replace with the actual endpoint to handle the form submission
           data: formData,
           success: function(response) {
             // Clear the form inputs
