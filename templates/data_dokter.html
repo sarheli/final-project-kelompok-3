@@ -18,7 +18,7 @@
 	<section id="sidebar">
 		<a href="#" class="brand"><i class='bx bxs-smile icon'></i> Klinik jaya</a>
 		<ul class="side-menu">
-			<li><a href="/dashboard" ><i class='bx bxs-dashboard icon' ></i> Dashboard</a></li>
+			<li><a href="/dashboard"><i class='bx bxs-dashboard icon' ></i> Dashboard</a></li>
 			<li>
 				<a href="#"><i class='bx bxs-user icon' ></i> Pasien <i class='bx bx-chevron-right icon-right' ></i></a>
 				<ul class="side-dropdown">
@@ -28,7 +28,7 @@
 				</ul>
 			</li>
 			<li><a href="/dashboard/data_dokter" class="active"><i class='bx bxs-user icon' ></i> Dokter</a></li>
-			<li><a href="/dashboard/rekam_medis"><i class='bx bxs-video icon' ></i> Rekam Medis</a></li>
+			<li><a href="/dashboard/rekam_medis" ><i class='bx bxs-video icon' ></i> Rekam Medis</a></li>
 		</ul>
 		
 	</section>
@@ -64,14 +64,44 @@
 				<li class="divider">/</li>
 				<li><a href="#" class="active">Dashboard</a></li>
 			</ul>
-			
 			<div class="data">
 				<div class="content-data">
-					<ul class="nav nav-pills mb-3" id="pills-tab" role="tablist" >
-						<li class="nav-item" role="presentation">
-						  <button class="btn btn-outline-dark active" id="dokter-tab" data-bs-toggle="pill" data-bs-target="#dokter" type="button" role="tab" aria-controls="dokter" aria-selected="true">Tambah Dokter</button>
-						</li>
-					</ul>
+					<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+						tambah dokter
+					</button>
+					<!-- Modal -->
+					<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+						<div class="modal-dialog">
+						<div class="modal-content">
+							<div class="modal-header">
+							<h5 class="modal-title" id="exampleModalLabel">Tambah Dokter/h5>
+							<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+							</div>
+							<div class="modal-body">
+								 <div class="mb-3">
+									<label for="name" class="form-label">Nama</label>
+									<input type="text" class="form-control" id="nama">
+								  </div>
+								  <div class="mb-3">
+									<label for="name" class="form-label">Spesialis</label>
+									<input type="text" class="form-control" id="spesialis">
+								  </div> <div class="mb-3">
+									<label for="name" class="form-label">foto</label>
+									<input type="file" class="form-control" id="update_foto">
+								  </div>
+								  <div class="mb-3">
+									<label for="name" class="form-label">Jadwal</label>
+									<input type="text" class="form-control" id="jadwal">
+								  </div>
+							</div>
+							<div class="modal-footer">
+							<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+							<button type="button" class="btn btn-primary">Save changes</button>
+							</div>
+						</div>
+						</div>
+					</div>
+  
 					<div class="head">
 						<table class="table">
                             <thead>
@@ -79,6 +109,7 @@
                                 <th scope="col">No</th>
                                 <th scope="col">Nama </th>
                                 <th scope="col">Spesialis</th>
+								<th scope="col">Foto</th>
                                 <th scope="col">Jadwal </th>
                                
                               </tr>
@@ -88,6 +119,7 @@
                                 <th scope="row">1</th>
                                 <td>Dr.A</td>
                                 <td>Gigi</td>
+								<td></td>
                                 <td>08.00-12.00</td>
                                 
                                 
@@ -97,6 +129,10 @@
 					
 				</div>
 			</div>
+					
+				</div>
+			</div>
+						
 			<!-- class modal -->
 		<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
 			<div class="modal-dialog modal-dialog-centered">
@@ -123,6 +159,7 @@
 			</div>
 		  </div>
 		</main>
+		
 		<!-- MAIN -->
 	</section>
 	<!-- NAVBAR -->

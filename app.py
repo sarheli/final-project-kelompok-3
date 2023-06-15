@@ -81,14 +81,6 @@ def dokter():
 def medis():
     return render_template('rekam_medis.html')
 
-@app.route('/dashboard')
-def dashboard():
-    if 'username' in session:
-        username = session['username']
-        return render_template('dashboard.html', username=username)
-    
-    return redirect('/login/pasien')
-
 if __name__ == '__main__':
     #DEBUG is SET to TRUE. CHANGE FOR PROD
     app.run('0.0.0.0',port=5000,debug=True)
