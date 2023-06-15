@@ -34,6 +34,26 @@ def login_admin():
 def login_pasien():
     return render_template('login_pasien.html')
 
+@app.route('/pasien/login/registrasi/Pasien', methods=['GET', 'POST'])
+def registrasi_pasien():
+    # nama = request.form['nama']
+    # username = request.form['username']
+    # telpon = request.form['telpon']
+    # password = request.form['password']
+    # retype_password = request.form['retype_password']
+    # alamat = request.form['alamat']
+
+    # # Lakukan validasi data
+    # if password != retype_password:
+    #     return 'Konfirmasi password tidak sesuai'
+
+    # # Simpan data ke basis data atau lakukan tindakan lainnya
+
+    # return 'Registrasi berhasil! Selamat datang, ' + nama
+
+    
+    return render_template('registrasi_pasien.html')
+
 @app.route('/dashboard')
 def dashboard():
     return render_template('dashboard.html')

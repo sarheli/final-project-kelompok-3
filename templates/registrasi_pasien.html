@@ -4,119 +4,146 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login Pasien</title>
-    <script src="https://code.jquery.com/jquery-3.6.4.js" integrity="sha256-a9jBBRygX1Bh5lt8GZjXDzyOB+bWve9EiO7tROUtj/E=" crossorigin="anonymous"></script>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f2f2f2;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-        }
+    <script src="https://code.jquery.com/jquery-3.6.4.js" 
+    integrity="sha256-a9jBBRygX1Bh5lt8GZjXDzyOB+bWve9EiO7tROUtj/E=" crossorigin="anonymous"></script>
 
-        .container {
-            max-width: 400px;
-            margin: 0 auto;
-            background-color: #fff;
-            border-radius: 5px;
-            padding: 40px 20px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
+  <title>Registrasi Pasien</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f2f2f2;
+      margin: 0;
+      padding: 20px;
+    }
 
-        .container h2 {
-            text-align: center;
-            margin-bottom: 20px;
-        }
+    h1 {
+      color: #333;
+      text-align: center;
+    }
 
-        .container label {
-            font-weight: bold;
-            margin-bottom: 10px;
-        }
+    form {
+      background-color: #fff;
+      border-radius: 5px;
+      padding: 20px;
+      max-width: 400px;
+      margin: 0 auto;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
 
-        .container input[type="text"],
-        .container input[type="password"] {
-            width: 100%;
-            padding: 10px;
-            margin-bottom: 15px;
-        }
+    label {
+      display: block;
+      margin-bottom: 5px;
+      color: #333;
+    }
 
-        .container input[type="submit"] {
-            width: 100%;
-            padding: 10px;
-            background-color: #4caf50;
-            color: #fff;
-            border: none;
-            border-radius: 3px;
-            cursor: pointer;
-            margin-bottom: 15px;
-        }
+    input[type="text"],
+    input[type="password"],
+    input[type="tel"],
+    textarea {
+      width: 100%;
+      padding: 10px;
+      border-radius: 3px;
+      border: 1px solid #ccc;
+      box-sizing: border-box;
+      margin-bottom: 10px;
+    }
 
-        .container p {
-            text-align: center;
-            margin-top: 20px;
-            font-size: 14px;
-        }
+    input[type="submit"] {
+      background-color: #4CAF50;
+      color: #fff;
+      border: none;
+      padding: 10px 20px;
+      cursor: pointer;
+      border-radius: 3px;
+    }
 
-        .register-link {
-            color: #007bff;
-            text-decoration: underline;
-            cursor: pointer;
-        }
+    input[type="submit"]:hover {
+      background-color: #45a049;
+    }
 
-        .register-link:hover {
-            color: #0056b3;
-        }
-    </style>
+    p {
+      text-align: center;
+      margin-top: 20px;
+    }
+
+    p a {
+      color: #007bff;
+      text-decoration: none;
+    }
+
+    .registration-result {
+      margin-top: 20px;
+      padding: 10px;
+      background-color: #f9f9f9;
+      border: 1px solid #ccc;
+      border-radius: 3px;
+    }
+
+    .login-link {
+      text-align: center;
+      margin-top: 10px;
+    }
+
+    .login-link a {
+      color: #007bff;
+      text-decoration: none;
+      transition: color 0.3s;
+    }
+
+    .login-link a:hover {
+      color: #0056b3;
+    }
+  </style>
 </head>
 <body>
-    <div class="container">
-        <h2>Login Pasien</h2>
-        <form id="loginForm">
-            <div class="form-group">
-                <label for="username">Username:</label>
-                <input type="text" id="username" name="username" class="input" required>
-            </div>
+  <h1>Registrasi Pasien</h1>
+  <form id="registrationForm">
+    <label for="nama">Nama:</label>
+    <input type="text" id="nama" name="nama" required>
+    
+    <label for="username">Username:</label>
+    <input type="text" id="username" name="username" required>
+    
+    <label for="telpon">Nomor Telepon:</label>
+    <input type="tel" id="telpon" name="telpon" required>
+    
+    <label for="password">Password:</label>
+    <input type="password" id="password" name="password" required>
+    
+    <label for="retype_password">Re-type Password:</label>
+    <input type="password" id="retype_password" name="retype_password" required>
+    
+    <label for="alamat">Alamat:</label>
+    <textarea id="alamat" name="alamat" rows="4" required></textarea>
+    
+    <input type="submit" value="Daftar">
+  </form>
+  
+  <div id="registrationResult" class="registration-result"></div>
 
-            <div class="form-group">
-                <label for="password">Password:</label>
-                <input type="password" id="password" name="password" class="input" required>
-            </div>
+  <div class="login-link">
+    <p>Sudah punya akun? <a href="#">Login sekarang</a></p>
+  </div>
 
-            <input type="submit" value="Login" class="button is-primary">
-            <p>Belum punya akun? <a href="registrasi_pasien.html" class="register-link">Daftar disini</a></p>
-        </form>
-    </div>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script>
+    // Menambahkan event listener ke form saat tombol "Daftar" ditekan
+    $('#registrationForm').on('submit', function(event) {
+      event.preventDefault(); // Menghentikan pengiriman data form secara langsung
 
-    <script>
-        $(document).ready(function() {
-            $('#loginForm').submit(function(event) {
-                event.preventDefault();
-
-                var username = $('#username').val();
-                var password = $('#password').val();
-
-                $.ajax({
-                    url: 'your_login_endpoint',
-                    method: 'POST',
-                    data: {
-                        username: username,
-                        password: password
-                    },
-                    success: function(response) {
-                        console.log(response);
-                        // Redirect to a new page or perform other actions
-                    },
-                    error: function(xhr, status, error) {
-                        console.error(error);
-                    }
-                });
-            });
-        });
-    </script>
+      // Mengirimkan data registrasi ke server menggunakan Ajax
+      $.ajax({
+        url: $(this).attr('action'),
+        type: $(this).attr('method'),
+        data: $(this).serialize(),
+        success: function(response) {
+          $('#registrationResult').html(response);
+        },
+        error: function() {
+          $('#registrationResult').html('Terjadi kesalahan. Silakan coba lagi.');
+        }
+      });
+    });
+  </script>
 </body>
 </html>
