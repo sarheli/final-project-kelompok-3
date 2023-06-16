@@ -26,7 +26,7 @@
       text-align: center;
     }
 
-    form {
+    .cutom-form{
       background-color: #fff;
       border-radius: 5px;
       padding: 20px;
@@ -53,7 +53,7 @@
       margin-bottom: 10px;
     }
 
-    input[type="submit"] {
+    .custom-button {
       background-color: #4CAF50;
       color: #fff;
       border: none;
@@ -62,7 +62,7 @@
       border-radius: 3px;
     }
 
-    input[type="submit"]:hover {
+    .custom-button:hover {
       background-color: #45a049;
     }
 
@@ -102,7 +102,7 @@
 </head>
 <body>
   <h1>Registrasi Pasien</h1>
-  <form id="registrationForm">
+  <div class="cutom-form">
     <label for="nama">Nama:</label>
     <input type="text" id="nama" name="nama" required>
     
@@ -121,58 +121,43 @@
     <label for="alamat">Alamat:</label>
     <textarea id="alamat" name="alamat" rows="4" required></textarea>
     
-    <input type="submit" value="Daftar">
-  </form>
+    <button type="button" onclick="sign_up()" class="custom-button">Daftar</button>
+  </div>
   
   <div id="registrationResult" class="registration-result"></div>
 
   <div class="login-link">
-    <p>Sudah punya akun? <a href="/pasien/login">Login sekarang</a></p>
+    <p>Sudah punya akun? <a href="/login">Login sekarang</a></p>
   </div>
 
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script>
-  $(document).ready(function() {
-    $('#registratiForm').submit(function(event) {
-      event.preventDefault(); // Menghentikan pengiriman data form secara langsung
-
-      var username = $('#username').val();
-      var password = $('#password').val();
+    function sign_up(){
+      if($('#password').val() != $('#retype_password').val()){
+        return alert("Passwword yang dimasukkan tidak sama!")
+      }
 
       $.ajax({
-        url: '/pasien/login/registrasi/Pasien',
-        method: 'POST',
+        type: 'POST',
+        url: '/registrasi',
         data: {
-          username_give: username,
-          password_give: password
+          name : $('#nama').val(),
+          username : $('#username').val(),
+          address : $('#alamat').val(),
+          phone : $('#telpon').val(),
+          password : $('#password').val()
         },
         success: function(response) {
-          if (response === "success") {
-            Swal.fire({
-              icon: 'success',
-              title: 'Registrasi Berhasil!',
-              text: 'Selamat, registrasi Anda berhasil!',
-              confirmButtonText: 'OK'
-            }).then(function() {
-              window.location.href = "/pasien/login"; // Ganti dengan halaman tujuan setelah registrasi sukses
-            });
-          } else {
-            Swal.fire({
-              icon: 'error',
-              title: 'Registrasi Gagal',
-              text: 'Registrasi gagal. Silakan coba lagi.',
-              confirmButtonText: 'OK'
-            });
-          }
-        },
-        error: function(xhr, status, error) {
-          console.error(error);
+            // Menampilkan pesan sukses atau kesalahan setelah registrasi
+            if (response.result === 'success') {
+                alert('Registrasi berhasil. Silakan login.');
+                window.location.href = '/login';
+            } else {
+                alert(response.msg);
+            }
         }
       });
-    });
-  });
-</script>
-
-    
-</body>
+    }
+  </script>
+  </body>
 </html>

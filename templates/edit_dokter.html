@@ -14,22 +14,10 @@
 	<title>AdminSite</title>
 
 	<script>
-		function tambah_dokter(){
-			if($('#nama').val() == ''){
-				return alert('Please enter Nama Dokter')
-			}
-
-			if($('#spesialis').val() == ''){
-				return alert('Please enter Spesialis Dokter')
-			}
-
-			if($('#jadwal').val() == ''){
-				return alert('Please enter Jadwal Dokter')
-			}
-
+		function edit_dokter(){
 			$.ajax({
 				method:'POST',
-				url:'/dokter/tambah',
+				url:'/dokter/edit/{{ dokter['_id'] }}',
 				data:{
 					nama: $('#nama').val(),
 					spesialis: $('#spesialis').val(),
@@ -38,8 +26,8 @@
 				},
 				success:function(data){	
 					if(data.result == 'success'){
-						alert('Data dokter berhasil ditambahkan! ✨')
-						window.location.reload();
+						alert('Data dokter berhasil diedit! ✨')
+						window.location.href = '/dashboard/data_dokter'
 					}
 				}
 			})
@@ -99,84 +87,35 @@
 				<li class="divider">/</li>
 				<li><a href="#" class="active">Dashboard</a></li>
 			</ul>
-			<div class="data">
-				<div class="content-data">
-					<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
-						tambah dokter
-					</button>
-					<!-- Modal -->
-					<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-						<div class="modal-dialog">
-						<div class="modal-content">
-							<div class="modal-header">
-							<h5 class="modal-title" id="exampleModalLabel">Tambah Dokter</h5>
-							<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-							</div>
-							<div class="modal-body">
-								 <div class="mb-3">
-									<label for="name" class="form-label">Nama</label>
-									<input type="text" class="form-control" id="nama">
-								  </div>
-								  <div class="mb-3">
-									<label for="name" class="form-label">Spesialis</label>
-									<input type="text" class="form-control" id="spesialis">
-								  </div> <div class="mb-3">
-									<label for="name" class="form-label">foto</label>
-									<input type="file" class="form-control" id="update_foto">
-								  </div>
-								  <div class="mb-3">
-									<label for="name" class="form-label">Jadwal</label>
-									<input type="text" class="form-control" id="jadwal">
-								  </div>
-							</div>
-							<div class="modal-footer">
-							<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-							<button type="button" class="btn btn-primary" onclick="tambah_dokter()">Tambah</button>
-							</div>
-						</div>
-						</div>
-					</div>
-  
-					<div class="head">
-						<table class="table">
-                            <thead>
-                              <tr>
-                                <th scope="col">No</th>
-                                <th scope="col">Nama </th>
-                                <th scope="col">Spesialis</th>
-								<th scope="col">Foto</th>
-                                <th scope="col">Jadwal </th>
-                                <th scope="col">Aksi</th>
-                              </tr>
-                            </thead>
-                            <tbody>
-								{% if dokters | length > 0 %}
-								{% for doct in dokters %}
-                              	<tr>
-									<th scope="row">{{ loop.index }}</th>
-									<td>{{ doct['nama'] }}</td>
-									<td>{{ doct['spesialis'] }}</td>
-									<td></td>
-									<td>{{ doct['jadwal'] }}</td>
-									<td>
-										<a href="/dokter/edit/{{ doct['_id'] }}" class="btn btn-sm btn-outline-warning">Edit</a>
-										<a href="/dokter/hapus/{{ doct['_id'] }}" class="btn btn-sm btn-outline-danger">Hapus</a>
-									</td>
-                              	</tr>
-								{% endfor %}
-								{% else %}
-								<tr>
-									<td colspan="6" class="text-center">Tidak ada data dokter!</td>
-								</tr>
-								{% endif %}
-                            </tbody>
-                          </table>
-					
-				</div>
-			</div>
-					
-				</div>
-			</div>
+			
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="mb-3">
+                                <label for="name" class="form-label">Nama</label>
+                                <input type="text" class="form-control" id="nama" value="{{ dokter['nama'] }}">
+                            </div>
+                            <div class="mb-3">
+                                <label for="name" class="form-label">Spesialis</label>
+                                <input type="text" class="form-control" id="spesialis" value="{{ dokter['spesialis'] }}">
+                            </div> 
+                            <div class="mb-3">
+                                <label for="name" class="form-label">foto</label>
+                                <input type="file" class="form-control" id="update_foto">
+                            </div>
+                            <div class="mb-3">
+                                <label for="name" class="form-label">Jadwal</label>
+                                <input type="text" class="form-control" id="jadwal" value="{{ dokter['jadwal'] }}">
+                            </div>
+                            <div class="mb-3 d-flex flex-row gap-2">
+                                <button type="button" class="btn btn-secondary" onclick="window.location.href = '/dashboard/data_dokter'">Cancel</button>
+							    <button type="button" class="btn btn-primary" onclick="edit_dokter()">Simpan Perubahan</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
 						
 			<!-- class modal -->
 		<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">

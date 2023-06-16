@@ -1,6 +1,7 @@
 from flask import Flask, render_template, jsonify, request, redirect, url_for
 from flask import Flask, render_template, request, redirect, session, url_for
 from pymongo import MongoClient
+from bson import ObjectId
 from flask_session import Session
 import jwt
 import datetime
@@ -69,63 +70,151 @@ def login_admin():
     
 
 @app.route('/dashboard')
-def dashboard_admin():
-    token = request.cookies.get(TOKEN_KEY)
+def dashboard_pasien():
+    # an endpoint for retrieving a user's profile information
+    # and all of their posts
+    token_receive = request.cookies.get("mytoken")
     try:
-        payload = jwt.decode(token, SECRET_KEY, algorithms=['HS256'])
-        admin = db.admin.find_one({'username' : payload['id']})
-        
-        if payload['role'] != 'admin':
-            return redirect(url_for('login_pasien'), msg="You are not allowed to access this page!")
-        
-        return render_template('dashboard.html', admin=admin)
-    except(jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
-        return redirect(url_for('login_admin'), msg="Session expired!")
+        payload = jwt.decode(token_receive, SECRET_KEY, algorithms=["HS256"])
+        # if this is my own profile, True
+        # if this is somebody else's profile, False
+        # status = username == payload["id"]
 
+        user_info = db.users.find_one({"username": payload['id']}, {"_id": False})
+        return render_template("dashboard.html", user_info=user_info)
+    except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
+        return redirect(url_for("home"))
 
-@app.route('/pasien/login', methods=['GET', 'POST'])
+@app.route("/login")
+def login():
+    msg = request.args.get("msg")
+    return render_template("login_pasien.html", msg=msg)
+
+@app.route('/login', methods=['POST'])
 def login_pasien():
-    if request.method == 'POST':
-        username = request.form['username']
-        password = request.form['password']
-
-        user = db.pasien.find_one({'username': username, 'password': password})
-
-        if user:
-            session['username'] = username
-            return redirect(url_for('/dashboard'))
-        else:
-            return 'Login failed. Invalid username or password.'
-
-    return render_template('login_pasien.html')
-
-@app.route('/pasien/login/registrasi/Pasien', methods=['GET','POST'])
-def register_pasien():
-    if request.method == 'POST':
-        # Menerima data yang dikirim melalui POST request
-        username = request.form.get('username_give')
-        password = request.form.get('password_give')
-
-        # Lakukan proses registrasi dengan menyimpan data ke MongoDB
-        data = {
-            'username': username,
-            'password': password
+    username_receive = request.form["username"]
+    password_receive = request.form["password"]
+    pw_hash = hashlib.sha256(password_receive.encode("utf-8")).hexdigest()
+    print(username_receive, pw_hash)
+    result = db.pasien.find_one(
+        {
+            "username": username_receive,
+            "password": pw_hash,
         }
-        db.pasien.insert_one(data)
+    )
+    if result:
+        payload = {
+            "id": username_receive,
+            "role" : "pasien",
+            "exp": datetime.utcnow() + timedelta(seconds=60 * 60 * 24),
+        }
+        token = jwt.encode(payload, SECRET_KEY, algorithm="HS256")
 
-        # Setelah berhasil mendaftar, arahkan pengguna ke halaman login
-        return redirect('/pasien/login')
+        return jsonify(
+            {
+                "result": "success",
+                "token": token,
+            }
+        )
     else:
-        return render_template('registrasi_pasien.html')
+        return jsonify(
+            {
+                "result": "fail",
+                "msg": "We could not find a user with that id/password combination",
+            }
+        )
 
+@app.route("/login/registrasi", methods=["GET"])
+def registrasi():
+    msg = request.args.get("msg")
+    return render_template("registrasi_pasien.html", msg=msg)
+
+@app.route('/registrasi', methods=['POST'])
+def registrasi_pasien():
+    name = request.form['name']
+    username = request.form['username']
+    address = request.form['address']
+    phone = request.form['phone']
+    password = request.form['password']
+    pw_hash = hashlib.sha256(password.encode('utf-8')).hexdigest()
+
+    doc = {
+        "name": name,
+        "username": username,
+        "address": address,
+        "phone": phone,
+        "password": pw_hash,
+    }
+    
+    # print(doc)
+    db.pasien.insert_one(doc)
+    return jsonify({"result": "success"})
+
+@app.route('/pasien/dashboard')
+def pasien_page():
+    return render_template('halaman_pasien.html')
+    
 
 @app.route('/dashboard/data_dokter')
 def dokter():
-    return render_template('data_dokter.html')
+    dokters = list(db.dokter.find({}))
+    
+    for doct in dokters:
+        doct['_id'] = str(doct['_id'])
+    
+    return render_template('data_dokter.html', dokters=dokters)
 
 @app.route('/dashboard/rekam_medis')
 def medis():
     return render_template('rekam_medis.html')
+
+
+
+
+@app.route('/dokter/tambah', methods=['POST'])
+def tambah_dokter():
+    nama = request.form['nama']
+    spesialis = request.form['spesialis']   
+    jadwal = request.form['jadwal']
+    foto = request.form['foto']
+    
+    doc = {
+        "nama": nama,
+        "spesialis": spesialis,
+        "jadwal": jadwal,
+        "foto" :foto
+    }
+    
+    db.dokter.insert_one(doc)
+    return jsonify({"result": "success"})
+
+@app.route('/dokter/hapus/<id_dokter>')
+def hapus_dokter(id_dokter):
+    db.dokter.delete_one({'_id' : ObjectId(id_dokter)})
+    
+    return redirect('/dashboard/data_dokter')
+
+@app.route('/dokter/edit/<id_dokter>', methods=['GET', 'POST'])
+def edit_dokter(id_dokter):
+    if request.method == 'GET':
+        dokter = db.dokter.find_one({'_id' : ObjectId(id_dokter)})
+        dokter['_id'] = str(dokter['_id'])  
+        
+        return render_template('edit_dokter.html', dokter=dokter)
+    
+    nama = request.form['nama']
+    spesialis = request.form['spesialis']   
+    jadwal = request.form['jadwal']
+    foto = request.form['foto']
+    
+    db.dokter.update_one({'_id': ObjectId(id_dokter)}, {'$set' : {
+        "nama": nama,
+        "spesialis": spesialis,
+        "jadwal": jadwal,
+        "foto" : foto
+    }})
+    
+    return jsonify({"result": "success"})
 
 if __name__ == '__main__':
     #DEBUG is SET to TRUE. CHANGE FOR PROD
