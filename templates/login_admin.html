@@ -48,14 +48,47 @@
       background-color: #45a049;
     }
   </style>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.0/jquery.js" integrity="sha512-8Z5++K1rB3U+USaLKG6oO8uWWBhdYsM3hmdirnOEWp8h2B1aOikj5zBzlXs8QOrvY9OxEnD2QDkbSKKpfqcIWw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js" integrity="sha512-aUhL2xOCrpLEuGD5f6tgHbLYEXRpYZ8G5yD+WlFrXrPy2IrWBlu6bih5C9H6qGsgqnU6mgx6KtU8TreHpASprw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
   <script>
+    function loginAdmin(){
+      console.log("Login Admin")
+      if($('#username').val() == ""){
+        return alert('Please enter username!')
+      }
+
+      if($('#password').val() == ""){
+        return alert('Please enter password!')
+      }
+
+      $.ajax({
+        method:"POST",
+        url: '/super-admin/login',
+        data: { 
+          username:$('#username').val(),
+          password:$('#password').val()
+        },
+        success: function(data){
+          console.log("request done")
+          if(data.result == 'success'){
+            $.cookie('mytoken', data.token, {path:'/'})
+            window.location.href = '/dashboard'
+          }else{
+            alert(data.msg)
+          }
+        }
+      })
+    }
+
     function redirectToLogin() {
       // Mengatur waktu penundaan sebelum pengalihan (dalam milidetik)
       var delayInMilliseconds = 2000; // Contoh penundaan 2 detik
 
       // Mengarahkan ke halaman login semula setelah penundaan
       setTimeout(function() {
-        window.location.href = "login.html";
+        window.location.href = "login_admin.html";
       }, delayInMilliseconds);
     }
   </script>
@@ -63,19 +96,19 @@
 <body>
   <h1>Login Admin</h1>
   <div class="container">
-    <form action="login_pasien.html" method="post" target="_blank" onsubmit="redirectToLogin()">
+    <!-- <form action="login_pasien.html" method="post" target="_blank" onsubmit="redirectToLogin()">-->
       <div class="form-group">
         <label for="username">Username</label>
-        <input type="text" id="username" name="username" placeholder="Username" required>
+        <input type="text" id="username" name="username" placeholder="Username" required >
       </div>
       <div class="form-group">
         <label for="password">Password</label>
         <input type="password" id="password" name="password" placeholder="Password" required>
       </div>
       <div class="form-group">
-        <input type="submit" value="Admin">
+        <input type="submit" value="Admin" onclick="loginAdmin()">
       </div>
-    </form>
+    <!-- </form> -->
   </div>
 </body>
 </html>

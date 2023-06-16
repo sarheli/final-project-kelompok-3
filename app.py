@@ -10,9 +10,9 @@ import hashlib
 app = Flask(__name__)
 Session(app)
 
-client = MongoClient('mongodb+srv://SAR11:SARHELI@cluster0.c4knhwy.mongodb.net/?retryWrites=true&w=majority')
+client = MongoClient('mongodb+srv://finalproject1290:admin@cluster0.2stcpcn.mongodb.net/?retryWrites=true&w=majority')
 db = client['FINAL3']  
-collection = db['kelompok3'] 
+
 
 app.config["TEMPLATES_AUTO_RELOAD"] = True
 app.config["UPLOAD_FOLDER"] = "./static/profile_pics"
@@ -30,10 +30,58 @@ def home():
 def about():
     return render_template('about.html')
 
-@app.route('/super-admin/login')
+@app.route('/super-admin/login', methods=['GET', 'POST'])
 def login_admin():
+    if request.method == 'POST':
+        username = request.form['username']
+        password = request.form['password']
+        pw_hash = hashlib.sha256(password.encode("utf-8")).hexdigest()
+        print(pw_hash)
+        admin=db.admin.find_one({
+            "username": username,
+            "password": pw_hash,
+        })
+        
+        if admin : 
+            payload={
+                'id': username,
+                'role' : 'admin',
+                "exp": datetime.utcnow() + timedelta(seconds=60 * 60 * 24)
+            } 
+            token = jwt.encode(payload, SECRET_KEY, algorithm="HS256")
+            
+            return jsonify(
+                {
+                    "result": "success",
+                    "role":'admin',
+                    "token": token,
+                }
+            )
+        else: 
+            return jsonify(
+                {
+                    "result": "faild",
+                    "msg": 'akun tidak di temukan',
+                }
+            )
+        
     return render_template('login_admin.html')
     
+
+@app.route('/dashboard')
+def dashboard_admin():
+    token = request.cookies.get(TOKEN_KEY)
+    try:
+        payload = jwt.decode(token, SECRET_KEY, algorithms=['HS256'])
+        admin = db.admin.find_one({'username' : payload['id']})
+        
+        if payload['role'] != 'admin':
+            return redirect(url_for('login_pasien'), msg="You are not allowed to access this page!")
+        
+        return render_template('dashboard.html', admin=admin)
+    except(jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
+        return redirect(url_for('login_admin'), msg="Session expired!")
+
 
 @app.route('/pasien/login', methods=['GET', 'POST'])
 def login_pasien():
@@ -41,7 +89,7 @@ def login_pasien():
         username = request.form['username']
         password = request.form['password']
 
-        user = collection.find_one({'username': username, 'password': password})
+        user = db.pasien.find_one({'username': username, 'password': password})
 
         if user:
             session['username'] = username
@@ -63,7 +111,7 @@ def register_pasien():
             'username': username,
             'password': password
         }
-        collection.insert_one(data)
+        db.pasien.insert_one(data)
 
         # Setelah berhasil mendaftar, arahkan pengguna ke halaman login
         return redirect('/pasien/login')
