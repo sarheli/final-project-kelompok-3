@@ -1,15 +1,14 @@
 from flask import Flask, render_template, jsonify, request, redirect, url_for
-from flask import Flask, render_template, request, redirect, session, url_for
 from pymongo import MongoClient
+from werkzeug.utils import secure_filename
 from bson import ObjectId
-from flask_session import Session
 import jwt
 import datetime
 from datetime import datetime, timedelta
 import hashlib
 
+
 app = Flask(__name__)
-Session(app)
 
 client = MongoClient('mongodb+srv://finalproject1290:admin@cluster0.2stcpcn.mongodb.net/?retryWrites=true&w=majority')
 db = client['FINAL3']  
@@ -80,7 +79,7 @@ def dashboard_pasien():
         # if this is somebody else's profile, False
         # status = username == payload["id"]
 
-        user_info = db.users.find_one({"username": payload['id']}, {"_id": False})
+        user_info = db.pasien.find_one({"username": payload['id']}, {"_id": False})
         return render_template("dashboard.html", user_info=user_info)
     except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
         return redirect(url_for("home"))
@@ -168,7 +167,21 @@ def dokter():
 def medis():
     return render_template('rekam_medis.html')
 
+@app.route('/dashboard/data_antrian')
+def antrian():
+    return render_template('data_antrian.html')
 
+@app.route('/dashboard/data_pasien')
+def pasi():
+    return render_template('data_pasien.html')
+
+@app.route('/pasien/booking')
+def booking():
+    return render_template('booking.html')
+
+# @app.route('/user')
+# def user():
+#     return render_template('user.html')
 
 
 @app.route('/dokter/tambah', methods=['POST'])
@@ -215,6 +228,79 @@ def edit_dokter(id_dokter):
     }})
     
     return jsonify({"result": "success"})
+
+@app.route('/update_profile', methods=['POST'])
+def save_img():
+    token_receive = request.cookies.get(TOKEN_KEY)
+    try:
+        payload = jwt.decode(
+            token_receive, 
+            SECRET_KEY, 
+            algorithms=['HS256']
+        )
+        username = payload["id"]
+        name_receive = request.form["name_give"]
+        about_receive = request.form["about_give"]
+        
+        new_doc = {
+            "profile_name": name_receive, 
+            "profile_info": about_receive
+            }
+        
+        if "file_give" in request.files:
+            file = request.files["file_give"]
+            filename = secure_filename(file.filename)
+            extension = filename.split(".")[-1]
+            file_path = f"profile_pics/{username}.{extension}"
+            file.save("./static/" + file_path)
+            new_doc["profile_pic"] = filename
+            new_doc["profile_pic_real"] = file_path
+        db.users.update_one(
+            {"username": payload["id"]}, 
+            {"$set": new_doc}
+            )
+        return jsonify({
+            'result': 'success', 
+            'msg': 'Your profile has been updated'})
+    except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
+        return redirect(url_for('home'))
+    
+@app.route('/user/<username>', methods=['GET'])
+def user(username):
+    token_receive = request.cookies.get(TOKEN_KEY)
+    try:
+        payload = jwt.decode(
+            token_receive, 
+            SECRET_KEY, 
+             algorithms=['HS256']
+        )
+        status = username == payload.get('id')  
+        user_info = db.users.find_one(
+            {'username': username}, 
+            {'_id': False}
+        )
+        return render_template(
+            'user.html', 
+            user_info=user_info, 
+            status=status
+        )
+    except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
+        return redirect(url_for('home'))
+    
+@app.route('/approve_request', methods=['POST'])
+def approve_request():
+    request_id = ObjectId(request.form['request_id'])
+    pet_id = ObjectId(request.form['pet_id'])
+    db.admin.update_one({'_id': request_id}, {'$set': {'status': 'approved'}})
+    db.pasien.update_one({'_id': pet_id}, {'$set': {'status': True}})
+    return redirect(url_for('antrian'))
+
+@app.route('/decline_request', methods=['POST'])
+def decline_request():
+    request_id = ObjectId(request.form['request_id'])
+    db.request_list.update_one({'_id': request_id}, {'$set': {'status': 'declined'}})
+    return redirect(url_for('antrian'))
+
 
 if __name__ == '__main__':
     #DEBUG is SET to TRUE. CHANGE FOR PROD
