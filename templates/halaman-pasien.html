@@ -7,8 +7,45 @@
 	<!-- bootrap css -->
 	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
 	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.0/jquery.js" integrity="sha512-8Z5++K1rB3U+USaLKG6oO8uWWBhdYsM3hmdirnOEWp8h2B1aOikj5zBzlXs8QOrvY9OxEnD2QDkbSKKpfqcIWw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 	<link rel="stylesheet" href="/static/style.css">
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+	<script src="/static/script.js"></script>
 	<title>AdminSite</title>
+
+	<script>
+		function tambah_dokter(){
+			if($('#nama').val() == ''){
+				return alert('Please enter Nama Dokter')
+			}
+
+			if($('#spesialis').val() == ''){
+				return alert('Please enter Spesialis Dokter')
+			}
+
+			if($('#jadwal').val() == ''){
+				return alert('Please enter Jadwal Dokter')
+			}
+
+			$.ajax({
+				method:'POST',
+				url:'/dokter/tambah',
+				data:{
+					nama: $('#nama').val(),
+					spesialis: $('#spesialis').val(),
+					jadwal: $('#jadwal').val(),
+					foto: ''
+				},
+				success:function(data){	
+					if(data.result == 'success'){
+						alert('Data dokter berhasil ditambahkan! ✨')
+						window.location.reload();
+					}
+				}
+			})
+		}
+	</script>
+
 </head>
 <body>
 	
@@ -16,17 +53,17 @@
 	<section id="sidebar">
 		<a href="#" class="brand"><i class='bx bxs-smile icon'></i> Klinik jaya</a>
 		<ul class="side-menu">
-			<li><a href="/dashboard" ><i class='bx bxs-dashboard icon' ></i> Dashboard</a></li>
+			<li><a href="/dashboard"><i class='bx bxs-dashboard icon' ></i> Dashboard</a></li>
 			<li>
 				<a href="#"><i class='bx bxs-user icon' ></i> Pasien <i class='bx bx-chevron-right icon-right' ></i></a>
 				<ul class="side-dropdown">
-					<li><a href="/dashboard/data_antrian" class="active">Antrian</a></li>
+					<li><a href="/dashboard/data_antrian">Antrian</a></li>
 					<li><a href="#">Data Pasien</a></li>
 					<li><a href="#">Riwayat Pasien</a></li>
 				</ul>
 			</li>
-			<li><a href="/dashboard/data_dokter"><i class='bx bxs-user icon' ></i> Dokter</a></li>
-			<li><a href="#"><i class='bx bxs-video icon' ></i> Rekam Medis</a></li>
+			<li><a href="/dashboard/data_dokter" class="active"><i class='bx bxs-user icon' ></i> Dokter</a></li>
+			<li><a href="/dashboard/rekam_medis" ><i class='bx bxs-video icon' ></i> Rekam Medis</a></li>
 		</ul>
 		
 	</section>
@@ -62,62 +99,12 @@
 				<li class="divider">/</li>
 				<li><a href="#" class="active">Dashboard</a></li>
 			</ul>
-			
-			</div>
-			<div class="data">
-				<div class="content-data">
-					<div class="head">
+            <div class="container">
+                <div class="jumbotron">
+                  <h1 class="display-4">Selamat Datang di Halaman Pasien</h1>
+                  <p class="lead">Selamat datang di portal pasien kami. Kami siap memberikan pelayanan terbaik kepada Anda.</p>
+                </div>
 						
-            <table class="table table-striped">
-              <thead class="thead-dark">
-                <tr>
-                  <th scope="col">No. Antrian</th>
-                  <th scope="col">Nama Pasien</th>
-                  <th scope="col">Usia</th>
-                  <th scope="col">Jenis Kelamin</th>
-                  <th scope="col">Dokter</th>
-                  <th scope="col">Tanggal Kunjungan</th>
-                  <th scope="col">Jadwal Dokter</th>
-                  <th scope="col">Status</th>
-                  <th scope="col">Aksi</th>
-                </tr>
-              </thead>
-              <tbody>
-				{% for data in data_antrian %}
-                <tr>
-					<th scope="row">{{ data['nomor_antrian'] }}</th>
-					<td>{{ data['pasien']['name'] }}</td>
-					<td>28</td>
-					<td>Laki-laki</td>
-					<td>{{ data['dokter']['nama'] }}</td>
-					<td>{{ data['tanggal'] }}</td>
-					<td>{{ data['dokter']['jadwal'] }}</td>
-					<td>{{ data['status'] }}</td>
-					{% if data['status'] == 'pending' %}
-					<td class="actions">
-						<button class="btn btn-success btn-approve">Approve</button>
-						<button class="btn btn-danger btn-reject">Reject</button>
-					</td>
-					{% elif data['status'] == 'approved' %}
-					{% if data['status_rekam_medis'] == false %}
-					<td class="actions">
-						<button class="btn btn-success btn-approve">Rekam Medis</button>
-					</td>
-					{% else %}
-					<td class="actions">
-						<button class="btn btn-success btn-approve" disabled>Sudah Rekam Medis</button>
-					</td>
-					{% endif %}
-					{% else %}
-					<td></td>
-					{% endif %}
-                </tr>
-				{% endfor %}
-              </tbody>
-            </table>
-
-				</div>
-			</div>
 			<!-- class modal -->
 		<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
 			<div class="modal-dialog modal-dialog-centered">
@@ -144,41 +131,11 @@
 			</div>
 		  </div>
 		</main>
+		
 		<!-- MAIN -->
 	</section>
 	<!-- NAVBAR -->
 
-	<script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
-	<script src="/static/script.js"></script>
-  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-  <script>
-    $(document).ready(function () {
-      // Menangkap tombol approve dan reject
-      $(".btn-approve").click(function () {
-        // Menampilkan pop-up konfirmasi
-        if (confirm("Apakah Anda yakin ingin menyetujui antrian ini?")) {
-          // Mengirim data ke server untuk disimpan (gunakan AJAX atau form submit)
-          $.ajax({
-            type: "POST",
-            url: "url_kirim_data_approve",
-            data: { id: "001" }, // Contoh data yang dikirim
-            success: function (response) {
-              // Tampilkan pesan sukses atau lakukan aksi lain sesuai kebutuhan
-              alert("Data disimpan!");
-            },
-            error: function (xhr, status, error) {
-              // Tampilkan pesan error atau lakukan penanganan error sesuai kebutuhan
-              alert("Terjadi kesalahan saat menyimpan data.");
-            },
-          });
-        }
-      });
-
-      $(".btn-reject").click(function () {
-        // Tidak melakukan apa pun karena data tidak perlu disimpan
-      });
-    });
-  </script>
+	
 </body>
-
 </html>

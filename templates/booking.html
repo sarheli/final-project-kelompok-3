@@ -20,7 +20,7 @@ body {
     margin: 50px auto;
   	font-size: 15px;
 }
-.login-form form {
+.login-form > div {
     margin-bottom: 15px;
     background: #f7f7f7;
     box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.3);
@@ -41,29 +41,83 @@ body {
 </head>
 <body>
 <div class="login-form">
-    <form action="/examples/actions/confirmation.php" method="post">
+    <div>
         <h2 class="text-center">Booking Online Pasien</h2>       
         <div class="form-group">
-            <label for="dokter">Tanggal Kunjungan:</label>
-            <input type="date" class="form-control" placeholder="date" required="required">
+            <label for="tanggal">Tanggal Kunjungan:</label>
+            <input type="date" class="form-control" id="tanggal" placeholder="date" required="required">
         </div>
         <div class="form-group">
             <label for="dokter">Dokter:</label>
             <select class="form-control" id="dokter" required>
-                <option value="">Pilih dokter</option>
-                <option value="dr. A">dr. A</option>
-                <option value="dr. B">dr. B</option>
-                <option value="dr. C">dr. C</option>
+                <option value="" selected hidden>Pilih dokter</option>
+                {% for dokter in data_dokter %}
+                <option value="{{ dokter['_id'] }}">{{ dokter['nama'] }}</option>
+                {% endfor %}
             </select>
         </div>
         <div class="form-group">
-            <button type="submit" class="btn btn-primary btn-block">Sumbit</button>
+            <button type="submit" class="btn btn-primary btn-block" onclick="book()">Sumbit</button>
         </div>
         <div class="clearfix">
             
         </div>        
-    </form>
-
+    </div>
 </div>
+<div class="d-flex justify-content-center bg-light">
+    <table class="table table-striped table-hover">
+        <thead>
+            <tr>
+                <th scope="col">No</th>
+                <th scope="col">Nama</th>
+                <th scope="col">Spesialis</th>
+                <th scope="col">Jadwal</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for dokter in data_dokter %}
+            <tr>
+                    <th scope="row">{{ loop.index }}</th>
+                    <td>{{ dokter['nama'] }}</td>
+                    <td>{{ dokter['spesialis'] }}</td>
+                    <td>{{ dokter['jadwal'] }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+      </table>
+</div>
+
+<script>
+    function book(){
+        if($('#tanggal').val() == ''){
+            return alert('Pilih tanggal')
+        }
+
+        // if($('#keluhan').val() == ''){
+        //     return alert('Silahkan berkeluh kesah')
+        // }
+
+        if($('#dokter').val() == ''){
+            return alert('Pilih dokter')
+        }
+
+        $.ajax({
+            method: "POST",
+            url: '/book',
+            data:{
+                tanggal: $('#tanggal').val(),
+                id_dokter: $('#dokter').val(),
+                keluhan: ""
+            },
+            success: function(data){
+                if(data.result == 'success'){
+                    alert('Data booking berhasil dikirim, silahkan tunggu konfirmasi!')
+                    window.location.href = '/pasien/dashboard'
+                }
+            }
+        })
+    }
+</script>
+
 </body>
 </html>

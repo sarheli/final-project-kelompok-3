@@ -12,6 +12,7 @@ app = Flask(__name__)
 
 client = MongoClient('mongodb+srv://finalproject1290:admin@cluster0.2stcpcn.mongodb.net/?retryWrites=true&w=majority')
 db = client['FINAL3']  
+collection = db["ulasan"]  
 
 
 app.config["TEMPLATES_AUTO_RELOAD"] = True
@@ -151,7 +152,17 @@ def registrasi_pasien():
 
 @app.route('/pasien/dashboard')
 def pasien_page():
-    return render_template('halaman_pasien.html')
+    token_receive = request.cookies.get(TOKEN_KEY)
+    try:
+        payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
+        user_info = db.users.find_one({'username': payload['id']}, {'_id': False})
+
+        if payload['role'] != "pasien":
+            return redirect('/dashboard/data_dokter')
+
+        return render_template('halaman_pasien.html', user_info=user_info)
+    except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
+        return redirect(url_for('home'))
     
 
 @app.route('/dashboard/data_dokter')
@@ -167,17 +178,53 @@ def dokter():
 def medis():
     return render_template('rekam_medis.html')
 
+@app.route('/dashboard/data_pasien')
+def pasien():
+    return render_template('data_pasien.html')
+
 @app.route('/dashboard/data_antrian')
 def antrian():
-    return render_template('data_antrian.html')
+    token_receive = request.cookies.get(TOKEN_KEY)
+    try:
+        payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
+        user_info = db.users.find_one({'username': payload['id']}, {'_id': False})
 
-@app.route('/dashboard/data_pasien')
-def pasi():
-    return render_template('data_pasien.html')
+        if payload['role'] != "admin":
+            return redirect('/pasien/dashboard')
+
+        data_antrian = list(db.booking.find({}))
+        for data in data_antrian:
+            data['pasien'] = db.pasien.find_one({'_id' : data['id_pasien']})
+            data['dokter'] = db.dokter.find_one({'_id' : data['id_dokter']})
+
+        print(data_antrian)
+
+        return render_template('data_antrian.html', user_info=user_info, data_antrian=data_antrian)
+    except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
+        return redirect(url_for('home'))
 
 @app.route('/pasien/booking')
 def booking():
-    return render_template('booking.html')
+    token_receive = request.cookies.get(TOKEN_KEY)
+    try:
+        payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
+        user_info = db.users.find_one({'username': payload['id']}, {'_id': False})
+
+        if payload['role'] != "pasien":
+            return redirect('/dashboard/data_dokter')
+
+        data_dokter = list(db.dokter.find({}))
+        for dokter in data_dokter:
+            dokter['_id'] = str(dokter['_id'])
+
+        return render_template('booking.html', user_info=user_info, data_dokter=data_dokter)
+    except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
+        return redirect(url_for('home'))
+
+
+@app.route('/pasien/riwayat')
+def riwayat():
+    return render_template('halaman_riwayat_.html')
 
 # @app.route('/user')
 # def user():
@@ -229,7 +276,7 @@ def edit_dokter(id_dokter):
     
     return jsonify({"result": "success"})
 
-@app.route('/update_profile', methods=['POST'])
+@app.route('/update_profile', methods=['GET'])
 def save_img():
     token_receive = request.cookies.get(TOKEN_KEY)
     try:
@@ -287,6 +334,8 @@ def user(username):
     except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
         return redirect(url_for('home'))
     
+
+
 @app.route('/approve_request', methods=['POST'])
 def approve_request():
     request_id = ObjectId(request.form['request_id'])
@@ -301,6 +350,72 @@ def decline_request():
     db.request_list.update_one({'_id': request_id}, {'$set': {'status': 'declined'}})
     return redirect(url_for('antrian'))
 
+@app.route("/pasien/ulasan", methods=["GET"])
+def ulasan_pasien():
+    msg = request.args.get("msg")
+    return render_template("ulasan_pasien.html", msg=msg)
+
+@app.route("/pasien/ulasan", methods=["GET"])
+def tambah_ulasan():
+    rating = int(request.form["rating"])
+    nama = request.form["nama"]
+    ulasan = request.form["ulasan"]
+
+    # Simpan ulasan ke dalam database MongoDB
+    ulasan_data = {
+        "rating": rating,
+        "nama": nama,
+        "ulasan": ulasan
+    }
+    collection.insert_one(ulasan_data)
+
+    return jsonify({"message": "Ulasan berhasil disimpan"})
+
+@app.route("/pasien/ulasan", methods=["GET"])
+def get_ulasan():
+    ulasan_list = []
+    for ulasan in collection.find():
+        ulasan_list.append({
+            "rating": ulasan["rating"],
+            "nama": ulasan["nama"],
+            "ulasan": ulasan["ulasan"]
+        })
+
+    return jsonify(ulasan_list)
+
+
+@app.route('/book', methods=['POST'])
+def book():
+    token_receive = request.cookies.get(TOKEN_KEY)
+    try:
+        payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
+        user_info = db.pasien.find_one({'username': payload['id']})
+        print(user_info)
+
+        if payload['role'] != "pasien":
+            return redirect('/dashboard/data_dokter')
+        
+        id_dokter = request.form.get('id_dokter')
+        tanggal = request.form.get('tanggal')
+        keluhan = request.form.get('keluhan')
+
+        data_count = db.booking.count_documents({})
+
+        doc = {
+            "nomor_antrian" : f'A0{data_count+1}',
+            "id_pasien" : user_info['_id'],
+            "id_dokter" : ObjectId(id_dokter),
+            "keluhan" : keluhan,
+            "tanggal" : tanggal,
+            "status" : 'pending',
+            "status_rekam_medis" : False
+        }
+
+        db.booking.insert_one(doc)
+
+        return jsonify({'result' : 'success'})
+    except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
+        return redirect(url_for('home'))
 
 if __name__ == '__main__':
     #DEBUG is SET to TRUE. CHANGE FOR PROD

@@ -29,6 +29,10 @@ body {
 	overflow-x: hidden;
 }
 
+
+  /* Sesuaikan gaya kartu sesuai kebutuhan */
+  
+
 a {
 	text-decoration: none;
 }
@@ -36,11 +40,6 @@ a {
 li {
 	list-style: none;
 }
-
-
-
-
-
 
 
 /* SIDEBAR */
@@ -576,6 +575,9 @@ main .btn-send {
 main .btn-send:hover {
 	background: var(--dark-blue);
 }
+
+
+
 /* MAIN */
 /* CONTENT */
 

@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Halaman Ulasan</title>
+  <style>
+    /* CSS Stylesheet */
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      font-family: Arial, sans-serif;
+    }
+
+    .rating {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 40px;
+      cursor: pointer;
+      text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+    }
+
+    .rating-star {
+      color: #ccc;
+      transition: color 0.3s ease;
+    }
+
+    .rating-star:hover,
+    .rating-star:hover ~ .rating-star {
+      color: orange;
+    }
+
+    .rating-star.checked {
+      color: orange;
+    }
+
+    .ulasan-section {
+      margin-top: 30px;
+      text-align: center;
+    }
+
+    .ulasan-form textarea {
+      width: 100%;
+      height: 150px;
+      padding: 10px;
+      font-size: 18px;
+      resize: vertical;
+    }
+
+    .ulasan-form input[type="text"] {
+      width: 100%;
+      padding: 10px;
+      font-size: 18px;
+      margin-bottom: 10px;
+    }
+
+    .ulasan-form label {
+      font-size: 18px;
+      font-weight: bold;
+      display: block;
+    }
+
+    .ulasan-form button {
+      padding: 10px 20px;
+      background-color: #007bff;
+      color: #ffffff;
+      font-size: 18px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    .ulasan-list {
+      list-style-type: none;
+      margin: 0;
+      padding: 0;
+      text-align: left;
+    }
+
+    .ulasan-item {
+      margin-bottom: 20px;
+      padding: 10px;
+      background-color: #f2f2f2;
+      border-radius: 4px;
+    }
+
+    .ulasan-info {
+      font-size: 16px;
+      font-weight: bold;
+      margin-bottom: 5px;
+    }
+
+    .ulasan-text {
+      font-size: 18px;
+    }
+  </style>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+  <script>
+    $(document).ready(function() {
+      var rating = 0;
+
+      // Menangani klik pada bintang rating
+      $('.rating-star').click(function() {
+        rating = $(this).data('rating');
+
+        // Menerapkan kelas "checked" pada bintang rating yang diklik
+        $(this).addClass('checked');
+        $(this).prevAll('.rating-star').addClass('checked');
+        $(this).nextAll('.rating-star').removeClass('checked');
+
+        // Simpan rating ke server atau lakukan pemrosesan lainnya
+        // ...
+
+        console.log('Rating: ' + rating);
+      });
+
+      // Menangani pengiriman ulasan melalui AJAX
+      $('#ulasan-form').submit(function(e) {
+        e.preventDefault();
+        var ulasantInput = $('#ulasan-input').val().trim();
+        var usernameInput = $('#username-input').val().trim();
+
+        if (ulasanInput !== '' && usernameInput !== '') {
+          // Kirim data ulasan ke server menggunakan AJAX
+          $.ajax({
+            url: '/submit_ulasan',
+            type: 'POST',
+            data: {
+              ulasan: ulasanInput,
+              username: usernameInput,
+              rating: rating
+            },
+            success: function(response) {
+              // Tanggapan dari server (jika ada)
+              console.log(response);
+
+              // Tambahkan ulasan ke daftar komentar secara langsung (contoh sederhana)
+              var ulasan = '<li class="ulasan-item">' +
+                                  '<div class="ulasan-info">' + usernameInput + '</div>' +
+                                  '<div class="ulasan-text">' + ulasan + '</div>' +
+                                  '<div class="rating">Rating: ' + rating + ' bintang</div>' +
+                                '</li>';
+              $('#ulasan-list').prepend(ulasantItem);
+
+              // Reset input ulasan
+              $('#ulasan-input').val('');
+              $('#username-input').val('');
+
+              // Reset rating
+              rating = 0;
+              $('.rating-star').removeClass('checked');
+            },
+            error: function(error) {
+              // Tanggapan jika terjadi kesalahan
+              console.log('Error:', error);
+            }
+          });
+        }
+      });
+    });
+  </script>
+</head>
+<body>
+  <h1>Halaman Ulasan</h1>
+
+  <div class="rating">
+    <span class="rating-star" data-rating="1">&#9733;</span>
+    <span class="rating-star" data-rating="2">&#9733;</span>
+    <span class="rating-star" data-rating="3">&#9733;</span>
+    <span class="rating-star" data-rating="4">&#9733;</span>
+    <span class="rating-star" data-rating="5">&#9733;</span>
+  </div>
+
+  <div class="ulasan-section">
+    <h2>Ulasan</h2>
+    <form id="ulasan-form">
+      <label for="username-input">Nama atau Akun:</label>
+      <input id="username-input" type="text" placeholder="Masukkan nama atau akun Anda">
+      <label for="ulasan-input">Ulasan:</label>
+      <textarea id="ulasan-input" placeholder="Tulis ulasan Anda"></textarea>
+      <button type="submit">Kirim</button>
+    </form>
+
+    <ul id="ulasan-list" class="ulasan-list">
+      <!-- Daftar komentar akan ditambahkan melalui JavaScript -->
+    </ul>
+  </div>
+</body>
+</html>
