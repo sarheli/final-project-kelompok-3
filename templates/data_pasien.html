@@ -7,72 +7,20 @@
 	<!-- bootrap css -->
 	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
 	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>
-<<<<<<< HEAD
-	<link rel="stylesheet" href="static/style.css">
-	<title>AdminSite</title>
-
-	<script>
-		$(document).ready(function () {
-			get_posts("{{ user_info.username }}")
-		  });
-	  
-		  function sign_out() {
-			$.removeCookie('mytoken', { path: '/' });
-			alert('Signed out!');
-			window.location.href = "/login";
-		  }
-	  
-		  function update_profile() {
-			let name = $("#input-name").val();
-			let file = $("#input-pic")[0].files[0];
-			let about = $("#textarea-about").val();
-			let form_data = new FormData();
-			form_data.append("file_give", file);
-			form_data.append("name_give", name);
-			form_data.append("about_give", about);
-			$.ajax({
-			  type: "POST",
-			  url: "/update_profile",
-			  data: form_data,
-			  cache: false,
-			  contentType: false,
-			  processData: false,
-			  success: function (response) {
-				if (response["result"] === "success") {
-				  alert(response["msg"]);
-				  window.location.reload();
-				}
-			  },
-			});
-		  }
-	</script>
-</head>
-
-
-=======
 	<link rel="stylesheet" href="/static/style.css">
 	<title>AdminSite</title>
 </head>
->>>>>>> adf6dfcd4ecd2c48f7f92215aebf08eb1843f3c6
 <body>
 	
 	<!-- SIDEBAR -->
 	<section id="sidebar">
 		<a href="#" class="brand"><i class='bx bxs-smile icon'></i> Klinik jaya</a>
 		<ul class="side-menu">
-<<<<<<< HEAD
-			<li><a href="/dashboard" class="active"><i class='bx bxs-dashboard icon' ></i> Dashboard</a></li>
-			<li>
-				<a href="#"><i class='bx bxs-user icon' ></i> Pasien <i class='bx bx-chevron-right icon-right' ></i></a>
-				<ul class="side-dropdown">
-					<li><a href="/dashboard/data_antrian">Antrian</a></li>
-=======
 			<li><a href="/dashboard" ><i class='bx bxs-dashboard icon' ></i> Dashboard</a></li>
 			<li>
 				<a href="#"><i class='bx bxs-user icon' ></i> Pasien <i class='bx bx-chevron-right icon-right' ></i></a>
 				<ul class="side-dropdown">
 					<li><a href="/dashboard/data_antrian" class="active">Antrian</a></li>
->>>>>>> adf6dfcd4ecd2c48f7f92215aebf08eb1843f3c6
 					<li><a href="#">Data Pasien</a></li>
 					<li><a href="#">Riwayat Pasien</a></li>
 				</ul>
@@ -114,45 +62,6 @@
 				<li class="divider">/</li>
 				<li><a href="#" class="active">Dashboard</a></li>
 			</ul>
-<<<<<<< HEAD
-			<div class="info-data">
-				<div class="card">
-					<div class="head">
-						<div>
-							<h2>7</h2>
-							<p>Antrian</p>
-						</div>
-					</div>
-				</div>
-				<div class="card">
-					<div class="head">
-						<div>
-							<h2>2</h2>
-							<p>pasien</p>
-						</div>
-						
-					</div>
-					
-				</div>
-				<div class="card">
-					<div class="head">
-						<div>
-							<h2>2</h2>
-							<p>Dokter</p>
-						</div>
-						
-					</div>
-					
-				</div>
-				
-				
-			</div>
-			<div class="data">
-				<div class="content-data">
-					<div class="head">
-						
-					
-=======
 			
 			</div>
 			<div class="data">
@@ -191,7 +100,6 @@
 								</tr>
 								{% endif %}
 
->>>>>>> adf6dfcd4ecd2c48f7f92215aebf08eb1843f3c6
 				</div>
 			</div>
 			<!-- class modal -->
@@ -199,29 +107,17 @@
 			<div class="modal-dialog modal-dialog-centered">
 			  <div class="modal-content">
 				<div class="modal-header">
-<<<<<<< HEAD
-				  <h1 class="modal-title fs-5" id="staticBackdropLabel"onclick="update_profile()">Update</h1>
-=======
 				  <h1 class="modal-title fs-5" id="staticBackdropLabel">Edit Profile</h1>
->>>>>>> adf6dfcd4ecd2c48f7f92215aebf08eb1843f3c6
 				  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 				</div>
 				<div class="modal-body">
 				  <div class="mb-3">
 					<label for="name" class="form-label">Ganti Foto Profil</label>
-<<<<<<< HEAD
-					<input type="file" class="form-control" id="name">
-				  </div>
-				  <div class="mb-3">
-					<label for="name" class="form-label">Ganti Username</label>
-					<input type="text" class="form-control" id="file" placeholder="Nama anda">
-=======
 					<input type="file" class="form-control" id="picture">
 				  </div>
 				  <div class="mb-3">
 					<label for="name" class="form-label">Ganti Username</label>
 					<input type="text" class="form-control" id="username_update" placeholder="Nama anda">
->>>>>>> adf6dfcd4ecd2c48f7f92215aebf08eb1843f3c6
 				  </div>
 				</div>
 				<div class="modal-footer">
@@ -237,10 +133,6 @@
 	<!-- NAVBAR -->
 
 	<script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
-<<<<<<< HEAD
-	<script src="static/script.js"></script>
-</body>
-=======
 	<script src="/static/script.js"></script>
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script>
@@ -273,5 +165,4 @@
   </script>
 </body>
 
->>>>>>> adf6dfcd4ecd2c48f7f92215aebf08eb1843f3c6
 </html>

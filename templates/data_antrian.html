@@ -87,21 +87,22 @@
                 <tr>
 					<th scope="row">{{ data['nomor_antrian'] }}</th>
 					<td>{{ data['pasien']['name'] }}</td>
-					<td>28</td>
-					<td>Laki-laki</td>
+					<td>{{ data['pasien']['usia'] }}</td>
+					<td>{{ data['pasien']['jk'] }}</td>
 					<td>{{ data['dokter']['nama'] }}</td>
 					<td>{{ data['tanggal'] }}</td>
 					<td>{{ data['dokter']['jadwal'] }}</td>
 					<td>{{ data['status'] }}</td>
 					{% if data['status'] == 'pending' %}
 					<td class="actions">
-						<button class="btn btn-success btn-approve">Approve</button>
-						<button class="btn btn-danger btn-reject">Reject</button>
+						<button class="btn btn-success btn-approve" onclick="approve()">Approve</button>
+						<button class="btn btn-success" onclick="test()">test</button>
+						<button class="btn btn-danger btn-reject" onclick="reject()">Reject</button>
 					</td>
 					{% elif data['status'] == 'approved' %}
 					{% if data['status_rekam_medis'] == false %}
 					<td class="actions">
-						<button class="btn btn-success btn-approve">Rekam Medis</button>
+						<button class="btn btn-success btn-approve" >Rekam Medis</button>
 					</td>
 					{% else %}
 					<td class="actions">
@@ -178,6 +179,31 @@
         // Tidak melakukan apa pun karena data tidak perlu disimpan
       });
     });
+
+	function test(requestId) {
+		// Mengambil nilai request_id dari parameter dan membuat objek data
+		var data = {
+		  request_id: requestId
+		};
+		
+		// Menggunakan AJAX untuk melakukan permintaan POST
+		$.ajax({
+		  url: '/approve_request',
+		  type: 'POST',
+		  data: data,
+		  success: function(response) {
+			// Handle respon sukses dari server
+			window.location.href = '/antrian'; // Mengarahkan ke halaman '/antrian'
+		  },
+		  error: function(error) {
+			// Handle kesalahan yang terjadi
+			console.log(error);
+		  }
+		});
+	  }
+	  
+	  
+	
   </script>
 </body>
 
