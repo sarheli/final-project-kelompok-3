@@ -65,11 +65,6 @@ body {
             <input type="text" class="form-control" id="keluhan" placeholder="Keluhan" required="required">
         </div>
 
-        <div class="form-group">
-            <label for="tanggal">Keluhan:</label>
-            <input type="text" class="form-control" id="keluhan" placeholder="keluhan" required="required">
-        </div>
-       
         <div class="form-group"> 
             <label for="dokter">Dokter:</label>
             <select class="form-control" id="dokter" required>
@@ -92,6 +87,7 @@ body {
         <thead>
             <tr>
                 <th scope="col">No</th>
+                <th scope="col">Nama Pasien</th>
                 <th scope="col">Nama Dokter</th>
                 <th scope="col">Spesialis</th>
                 <th scope="col">Jadwal</th>
@@ -102,6 +98,7 @@ body {
             <tr>
                     <th scope="row">{{ loop.index }}</th>
                     <td>{{ dokter['nama'] }}</td>
+                    <td>{{ dokter['dokter'] }}</td>
                     <td>{{ dokter['spesialis'] }}</td>
                     <td>{{ dokter['jadwal'] }}</td>
             </tr>

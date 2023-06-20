@@ -16,13 +16,13 @@
 	<section id="sidebar">
 		<a href="#" class="brand"><i class='bx bxs-smile icon'></i> Klinik jaya</a>
 		<ul class="side-menu">
-			<li><a href="/dashboard" ><i class='bx bxs-dashboard icon' ></i> Dashboard</a></li>
+			<li><a href="/dashboard" class="active"><i class='bx bxs-dashboard icon' ></i> Dashboard</a></li>
 			<li>
 				<a href="#"><i class='bx bxs-user icon' ></i> Pasien <i class='bx bx-chevron-right icon-right' ></i></a>
 				<ul class="side-dropdown">
-					<li><a href="/dashboard/data_antrian" class="active">Antrian</a></li>
-					<li><a href="#">Data Pasien</a></li>
-					<li><a href="#">Riwayat Pasien</a></li>
+					<li><a href="/dashboard/data_antrian">Antrian</a></li>
+					<li><a href="/dashboard/data_pasien">Data Pasien</a></li>
+					<li><a href="/pasien/riwayat">Riwayat Pasien</a></li>
 				</ul>
 			</li>
 			<li><a href="/dashboard/data_dokter"><i class='bx bxs-user icon' ></i> Dokter</a></li>
@@ -48,7 +48,7 @@
 				<img src="https://images.unsplash.com/photo-1517841905240-472988babdf9?ixid=MnwxMjA3fDB8MHxzZWFyY2h8NHx8cGVvcGxlfGVufDB8fDB8fA%3D%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60" alt="">
 				<ul class="profile-link">
 					<li><a href="#" data-bs-toggle="modal" data-bs-target="#staticBackdrop"><i class='bx bxs-user-circle icon' ></i>Edit Profile</a></li>
-					<li><a href="#"><i class='bx bxs-log-out-circle' ></i> Logout</a></li>
+					<li><button class="btn" onclick="logout()"><i class='bx bxs-log-out-circle' ></i> Logout</button></li>
 				</ul>
 			</div>
 		</nav>
@@ -89,11 +89,7 @@
 					<th scope="row">{{ data['nomor_antrian'] }}</th>
 					<td>{{ data['pasien']['name'] }}</td>
 					<td>{{ data['pasien']['usia'] }}</td>
-<<<<<<< HEAD
 					<td>{{ data['pasien']['jenis_kelamin'] }}</td>
-=======
-					<td>{{ data['pasien']['jk'] }}</td>
->>>>>>> c19a6aa06b8d04f5f87a2baddfaa86f8960f6f6c
 					<td>{{ data['dokter']['nama'] }}</td>
 					<td>{{ data['tanggal'] }}</td>
 					<td>{{ data['dokter']['jadwal'] }}</td>
@@ -102,19 +98,13 @@
 					{% if data['status'] == 'pending' %}
 					
 					<td class="actions">
-<<<<<<< HEAD
-						<button class="btn btn-success btn-approve"onclick="Approve()">Approve</button>
-						<button class="btn btn-danger btn-reject">Reject</button>
-=======
-						<button class="btn btn-success btn-approve" onclick="approve()">Approve</button>
-						<button class="btn btn-success" onclick="test()">test</button>
-						<button class="btn btn-danger btn-reject" onclick="reject()">Reject</button>
->>>>>>> c19a6aa06b8d04f5f87a2baddfaa86f8960f6f6c
+						<button class="btn btn-success btn-approve" onclick="Approve('{{ data["_id"] }}')">Approve</button>
+						<button class="btn btn-danger btn-reject" onclick="decline('{{ data["_id"] }}')">decline</button>
 					</td>
 					{% elif data['status'] == 'approved' %}
 					{% if data['status_rekam_medis'] == false %}
 					<td class="actions">
-						<button class="btn btn-success btn-approve" >Rekam Medis</button>
+						<button class="btn btn-success btn-approve"  data-bs-toggle="modal" data-bs-target="#rekam_medis" onclick="setAntrianId('{{ data['_id'] }}')">Rekam Medis</button>
 					</td>
 					{% else %}
 					<td class="actions">
@@ -131,6 +121,35 @@
 
 				</div>
 			</div>
+
+<!-- modal rekam medis -->
+<div class="modal fade" id="rekam_medis" tabindex="-1" aria-labelledby="rekam_medis" aria-hidden="true">
+	<div class="modal-dialog">
+	<div class="modal-content">
+		<div class="modal-header">
+		<h5 class="modal-title" id="rekam_medis">rekam_medis</h5>
+		<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+		</div>
+		<div class="modal-body">
+			<input type="hidden" class="form-control" id="id_antrian">
+			<div class="mb-3">
+				<label for="name" class="form-label">Diagnosa</label>
+				<input type="text" class="form-control" id="Diagnosa">
+			</div>
+			<div class="mb-3">
+				<label for="name" class="form-label">Obat</label>
+				<input type="text" class="form-control" id="Obat">
+			</div>
+		</div>
+		<div class="modal-footer">
+		<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+		<button type="button" class="btn btn-primary" onclick="simpan_rekam_medis()">Tambah</button>
+		</div>
+	</div>
+	</div>
+</div>
+
+
 			<!-- class modal -->
 		<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
 			<div class="modal-dialog modal-dialog-centered">
@@ -156,6 +175,9 @@
 			  </div>
 			</div>
 		  </div>
+
+		  <!-- MODAL REKAM MEDIS -->
+		  
 		</main>
 		<!-- MAIN -->
 	</section>
@@ -163,41 +185,75 @@
 
 	<script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
 	<script src="/static/script.js"></script>
-  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+	<script>
+		function setAntrianId(id){
+			$('#id_antrian').val("")
+			$('#Diagnosa').val("")
+			$('#Obat').val("")
 
-<<<<<<< HEAD
-=======
-      $(".btn-reject").click(function () {
-        // Tidak melakukan apa pun karena data tidak perlu disimpan
-      });
-    });
+			$('#id_antrian').val(id)
+		}
 
-	function test(requestId) {
-		// Mengambil nilai request_id dari parameter dan membuat objek data
-		var data = {
-		  request_id: requestId
-		};
-		
-		// Menggunakan AJAX untuk melakukan permintaan POST
-		$.ajax({
-		  url: '/approve_request',
-		  type: 'POST',
-		  data: data,
-		  success: function(response) {
-			// Handle respon sukses dari server
-			window.location.href = '/antrian'; // Mengarahkan ke halaman '/antrian'
-		  },
-		  error: function(error) {
-			// Handle kesalahan yang terjadi
-			console.log(error);
-		  }
-		});
-	  }
-	  
-	  
-	
-  </script>
->>>>>>> c19a6aa06b8d04f5f87a2baddfaa86f8960f6f6c
+		function simpan_rekam_medis(){
+			if($('#Diagnosa').val() == '' || $('#Obat').val() == ''){
+				return alert('Harap isi data rekam medis dengan lengkap!')
+			}
+
+			$.ajax({
+				method: "POST",
+				url: '/rekam_medis/simpan',
+				data:{
+					booking_id : $('#id_antrian').val(),
+					diagnosa : $('#Diagnosa').val(),
+					obat: $('#Obat').val()
+				},
+				success: function(data){
+					if(data.result == 'success'){
+						alert('Rekam medis berhasil disimpan!')
+						window.location.reload()
+					}
+				}
+			})
+		}
+
+		function Approve(booking_id){
+			console.log(booking_id)
+
+			$.ajax({
+				method:"POST",
+				url:'/approve_request',
+				data: {
+					request_id : booking_id
+				},
+				success: function(data){
+					if(data.result = 'success'){
+						alert('Data antrian berhasil di Approve!')
+						window.location.reload()
+					}
+				}
+			})
+		}
+
+		function decline(booking_id){
+			console.log(booking_id)
+
+			$.ajax({
+				method:"POST",
+				url:'/decline_request',
+				data: {
+					request_id : booking_id
+				},
+				success: function(data){
+					if(data.result = 'success'){
+						alert('Data antrian berhasil di decline!')
+						window.location.reload()
+					}
+				}
+			})
+		}
+	</script>
+
 </body>
 
 </html>

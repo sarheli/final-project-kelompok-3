@@ -5,7 +5,7 @@
   <!-- Bootstrap CDN -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
 	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>
-  <title>Hasil Pemeriksaan</title>
+  <title>Hasil Pemeriksaan Set</title>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -54,37 +54,39 @@
 </head>
 <body>
   <div class="booking-card">
-    <h1>Status Booking</h1>
-  </div>
-
-  <div class="d-flex justify-content-center bg-light mt-5">
+    <h1>Hasil Pemeriksaan</h1>
+    </div>
+  
+    <div class="d-flex justify-content-center bg-light mt-5">
     <table class="table table-striped table-hover">
       <thead class="thead-dark">
-        <tr>
-          <th scope="col">No. Antrian</th>
-          <th scope="col">Nama Pasien</th>
-          <th scope="col">Dokter</th>
-          <th scope="col">Tanggal Kunjungan</th>
-          <th scope="col">Jadwal Dokter</th>
-          <th scope="col">Keluhan</th>
-          <th scope="col">Status</th>
-        </tr>
+      <tr>
+        <th scope="col">No.</th>
+        <th scope="col">Nama Pasien</th>
+        <th scope="col">Tanggal Periksa</th>
+        <th scope="col">Keluhan</th>
+        <th scope="col">Diagnosa</th>
+        <th scope="col">Obat</th>
+        <th scope="col">Nama Dokter</th>
+        
+      </tr>
       </thead>
       <tbody>
-        {% for data in data_antrian %}
-        <tr>
-          <th scope="row">{{ data['nomor_antrian'] }}</th>
-          <td>{{ data['pasien'] ['name']}}</td>
-          <td>{{ data['dokter']['nama'] }}</td>
-          <td>{{ data['tanggal'] }}</td>
-          <td>{{ data['dokter']['jadwal'] }}</td>
-          <td>{{ data['keluhan'] }}</td>
-          <td>{{ data['status'] }}</td>
-        </tr>
-        {% endfor %}
+      {%  for data in rekam_medis %}
+      <tr>
+        <td scope="row">{{ loop.index }}</td>
+        <td>{{ data['nama_pasien'] }}</td>
+        <td>{{ data['tanggal_periksa'] }}</td>
+        <td>{{ data['keluhan'] }}</td>
+        <td>{{ data['diagnosa'] }}</td>
+        <td>{{ data['obat'] }}</td>
+        <td>{{ data['nama_dokter'] }}</td>
+      </tr>
+      {% endfor %}
       </tbody>
     </table>
-  </div>
+    </div>
+  
 
 </body>
 </html>

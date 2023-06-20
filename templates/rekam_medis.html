@@ -63,62 +63,44 @@
 				<li><a href="#" class="active">Dashboard</a></li>
 			</ul>
 			
-			<div class="data">
-				<div class="content-data">
-					<div class="head">
-						<table class="table">
-                            <thead>
-                              <tr>
-                                <th scope="col">No</th>
-                                <th scope="col">Nama </th>
-                                <th scope="col">Usia</th>
-                                <th scope="col">Jenis Kelamin</th>
-                                <th scope="col">Keluhan</th>
-                                <th scope="col">Tanggal Kunjungan</th>
-                                <th scope="col">Dokter</th>
-                              </tr>
-                            </thead>
-                            <tbody>
-                              <tr>
-                                <th scope="row">1</th>
-                                <td>Rizki</td>
-                                <td>21</td>
-                                <td>Laki-Laki</td>
-                                <td>migren</td>
-                                <td>12-12-12</td>
-                                <td>Dokter umum </td>
-                                
-                              </tr>
-                            </tbody>
-                          </table>
-					
-				</div>
-			</div>
-			<!-- class modal -->
-		<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-			<div class="modal-dialog modal-dialog-centered">
-			  <div class="modal-content">
-				<div class="modal-header">
-				  <h1 class="modal-title fs-5" id="staticBackdropLabel">Edit Profile</h1>
-				  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-				</div>
-				<div class="modal-body">
-				  <div class="mb-3">
-					<label for="name" class="form-label">Ganti Foto Profil</label>
-					<input type="file" class="form-control" id="picture">
-				  </div>
-				  <div class="mb-3">
-					<label for="name" class="form-label">Ganti Username</label>
-					<input type="text" class="form-control" id="username_update" placeholder="Nama anda">
-				  </div>
-				</div>
-				<div class="modal-footer">
-				  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-				  <button type="button" class="btn btn-primary">Save</button>
-				</div>
+			<div class="booking-card">
+				<h1>Status Booking</h1>
 			  </div>
-			</div>
-		  </div>
+			
+			  <div class="d-flex justify-content-center bg-light mt-5">
+				<table class="table table-striped table-hover">
+				  <thead class="thead-dark">
+					<tr>
+					  <th scope="col">No.</th>
+					  <th scope="col">Nama Pasien</th>
+					  <th scope="col">Tanggal Periksa</th>
+					  <th scope="col">Keluhan</th>
+					  <th scope="col">Diagnosa</th>
+					  <th scope="col">Obat</th>
+					  <th scope="col">Nama Dokter</th>
+					  
+					</tr>
+				  </thead>
+				  <tbody>
+					{%  for data in rekam_medis %}
+					<tr>
+					  <td scope="row">{{ loop.index }}</td>
+					  <td>{{ data['nama_pasien'] }}</td>
+					  <td>{{ data['tanggal_periksa'] }}</td>
+					  <td>{{ data['keluhan'] }}</td>
+					  <td>{{ data['diagnosa'] }}</td>
+					  <td>{{ data['obat'] }}</td>
+					  <td>{{ data['nama_dokter'] }}</td>
+					</tr>
+					{% endfor %}
+				  </tbody>
+				</table>
+			  </div>
+			
+			<!-- class modal -->
+		
+
+		  
 		</main>
 		<!-- MAIN -->
 	</section>
@@ -126,5 +108,36 @@
 
 	<script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
 	<script src="/static/script.js"></script>
+	<script>
+	 function rekam_medis(){
+        if($('#tanggal').val() == ''){
+            return alert('Pilih tanggal')
+        }
+
+        if($('#keluhan').val() == ''){
+            return alert('Silahkan isi keluhan')
+        }
+
+        if($('#dokter').val() == ''){
+            return alert('Pilih dokter')
+        }
+
+        $.ajax({
+            method: "POST",
+            url: '/book',
+            data:{
+                tanggal: $('#tanggal').val(),
+                id_dokter: $('#dokter').val(),
+                keluhan: $('#keluhan').val(),
+            },
+            success: function(data){
+                if(data.result == 'success'){
+                    alert('Data booking berhasil dikirim, silahkan tunggu konfirmasi!')
+                    window.location.href = '/pasien/dashboard'
+                }
+            }
+        })
+    }
+</script>
 </body>
 </html>

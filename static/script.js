@@ -195,3 +195,11 @@ tooltip: {
 
 var chart = new ApexCharts(document.querySelector("#chart"), options);
 chart.render();
+
+// FUNGSI LOGOUT
+function logout() {
+	$.removeCookie('mytoken', { path: '/' });
+	$.removeCookie('role', { path: '/' });
+	alert('Logged out!');
+	window.location.href = "/super-admin/login"
+}

@@ -180,8 +180,49 @@ def dokter():
     return render_template('data_dokter.html', dokters=dokters)
 
 @app.route('/dashboard/rekam_medis')
+def rekam_medis():
+    token_receive = request.cookies.get(TOKEN_KEY)
+    try:
+        payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
+        user_info = db.admin.find_one({'username': payload['id']}, {'_id': False})
+
+        if payload['role'] != "admin":
+            return redirect('/pasien/dashboard')
+
+        rekam_medis = list(db.rekam_medis.find({}))
+        for data in rekam_medis:
+            data['_id'] = str(data['_id'])
+            booking = db.booking.find_one({'_id': data['id_antrian']})
+            data['nama_pasien'] = db.pasien.find_one({'_id' : booking['id_pasien']}, {'name' : True})['name']
+            data['nama_dokter'] = db.dokter.find_one({'_id' : booking['id_dokter']})['nama']
+            data['tanggal_periksa'] = booking['tanggal']
+            data['keluhan'] = booking['keluhan']
+        
+        # print(rekam_medis)
+
+        return render_template('rekam_medis.html', user_info=user_info, rekam_medis=rekam_medis)
+    except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
+        return redirect(url_for('home'))
+  
+
+@app.route('/rekam_medis/simpan', methods=['POST'])
 def medis():
-    return render_template('rekam_medis.html')
+    id_antrian = ObjectId(request.form['booking_id'])
+    diagnosa = request.form['diagnosa']
+    obat = request.form['obat']
+    
+
+    doc = {
+        "id_antrian": id_antrian,
+        "diagnosa": diagnosa,
+        "obat": obat,
+    }
+    
+    db.rekam_medis.insert_one(doc)
+    db.booking.update_one({'_id': id_antrian}, { '$set': {"status_rekam_medis": True}})
+    
+    return jsonify({"result": "success"})
+
 
 @app.route('/dashboard/data_pasien')
 def pasien():
@@ -202,7 +243,7 @@ def antrian():
             data['pasien'] = db.pasien.find_one({'_id' : data['id_pasien']})
             data['dokter'] = db.dokter.find_one({'_id' : data['id_dokter']})
 
-        print(data_antrian)
+        # print(data_antrian)
 
         return render_template('data_antrian.html', user_info=user_info, data_antrian=data_antrian)
     except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
@@ -228,12 +269,29 @@ def booking():
 
 
 @app.route('/pasien/riwayat')
-def riwayat():
-    return render_template('halaman_riwayat_.html')
+def riwayat_pasien():
+    return render_template('halaman_riwayat_kunjungan.html')
 
 @app.route('/pasien/status')
 def status():
-    return render_template('status_booking.html')
+    token_receive = request.cookies.get(TOKEN_KEY)
+    try:
+        payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
+        user_info = db.pasien.find_one({'username': payload['id']})
+
+        if payload['role'] != "pasien":
+            return redirect('/dashboard/data_dokter')
+        
+        data_antrian = list(db.booking.find({'id_pasien' : user_info['_id']}))
+        for data in data_antrian:
+            data['pasien'] = db.pasien.find_one({'_id' : data['id_pasien']})
+            data['dokter'] = db.dokter.find_one({'_id' : data['id_dokter']})
+
+        # print(data_antrian)
+
+        return render_template('status_booking.html', user_info=user_info, data_antrian=data_antrian)
+    except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
+        return redirect(url_for('home'))
 
 
 @app.route('/dokter/tambah', methods=['POST'])
@@ -241,13 +299,11 @@ def tambah_dokter():
     nama = request.form['nama']
     spesialis = request.form['spesialis']   
     jadwal = request.form['jadwal']
-    foto = request.form['foto']
     
     doc = {
         "nama": nama,
         "spesialis": spesialis,
         "jadwal": jadwal,
-        "foto" :foto
     }
     
     db.dokter.insert_one(doc)
@@ -342,24 +398,49 @@ def user(username):
 @app.route('/approve_request', methods=['POST'])
 def approve_request():
     request_id = ObjectId(request.form['request_id'])
-<<<<<<< HEAD
-    
-    db.admin.update_one({'_id': request_id}, {'$set': {'status': 'approved'}})
-=======
+
     db.booking.update_one({'_id': request_id}, {'$set': {'status': 'approved'}})
->>>>>>> c19a6aa06b8d04f5f87a2baddfaa86f8960f6f6c
-    return redirect(url_for('antrian'))
+    return jsonify({'result' : 'success'})
 
 @app.route('/decline_request', methods=['POST'])
 def decline_request():
-   request_id = ObjectId(request.form['request_id'])
-   db.booking.update_one({'_id': request_id}, {'$set': {'status': 'decline'}})
-   return redirect(url_for('antrian'))
+    request_id = ObjectId(request.form['request_id'])
 
-collection = db['reviews']
+    db.booking.update_one({'_id': request_id}, {'$set': {'status': 'decline'}})
+    return jsonify({'result' : 'success'})
+
+@app.route("/pasien/pemeriksaan")
+def hasil_pemeriksaangin():
+    token_receive = request.cookies.get(TOKEN_KEY)
+    try:
+        payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
+        user_info = db.admin.find_one({'username': payload['id']}, {'_id': False})
+
+        if payload['role'] != "pasien":
+            return redirect('/pasien/dashboard')
+
+        rekam_medis = list(db.rekam_medis.find({}))
+        for data in rekam_medis:
+            data['_id'] = str(data['_id'])
+            booking = db.booking.find_one({'_id': data['id_antrian']})
+            data['nama_pasien'] = db.pasien.find_one({'_id' : booking['id_pasien']}, {'name' : True})['name']
+            data['nama_dokter'] = db.dokter.find_one({'_id' : booking['id_dokter']})['nama']
+            data['tanggal_periksa'] = booking['tanggal']
+            data['keluhan'] = booking['keluhan']
+        
+        print(rekam_medis)
+
+        return render_template('hasil_pemeriksaan.html', user_info=user_info, rekam_medis=rekam_medis)
+    except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
+        return redirect(url_for('home'))
+  
+
+
+
 @app.route("/pasien/ulasan", methods=["GET"])
 def ulasan():
     msg = request.args.get("msg")
+   
     return render_template("ulasan_pasien.html", msg=msg)
 
 @app.route('/pasien/ulasan', methods=['POST'])
