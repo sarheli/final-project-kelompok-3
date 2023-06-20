@@ -225,7 +225,27 @@ def medis():
 
 @app.route('/dashboard/data_pasien')
 def pasien():
-    return render_template('data_pasien.html')
+
+    token_receive = request.cookies.get(TOKEN_KEY)
+    try:
+        payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
+        user_info = db.admin.find_one({'username': payload['id']}, {'_id': False})
+
+        if payload['role'] != "admin":
+            return redirect('/pasien/dashboard')
+
+        rekam_medis = list(db.rekam_medis.find({}))
+        for data in rekam_medis:
+            data['_id'] = str(data['_id'])
+            booking = db.booking.find_one({'_id': data['id_antrian']})
+            data['nama_pasien'] = db.pasien.find_one({'_id' : booking['id_pasien']}, {'name' : True})['name']
+            data['nama_dokter'] = db.dokter.find_one({'_id' : booking['id_dokter']})['nama']
+            data['tanggal_periksa'] = booking['tanggal']
+        print(rekam_medis)
+
+        return render_template('data_pasien.html', user_info=user_info, rekam_medis=rekam_medis)
+    except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
+        return redirect(url_for('home'))
 
 @app.route('/dashboard/data_antrian')
 def antrian():

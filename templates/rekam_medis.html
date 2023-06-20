@@ -9,6 +9,25 @@
 	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>
 	<link rel="stylesheet" href="/static/style.css">
 	<title>AdminSite</title>
+	<script>
+		function get_rekamMedis(username){
+			$("#box").empty();
+			$.ajax({
+				type: "GET",
+				url : `/get_rekamedis?username_give=${username}`,
+				data : {},
+				success : function(response){
+					if (response["result"] === "success"){
+						let rekam = response["rekam"];
+						for (let i = 0; i<rekam.length; i++){
+							let diagnosa = rekam[i]["diagnosa"];
+							let obat = rekam[i]["obat"];
+						}
+					}
+				}
+			})
+		}
+	</script>
 </head>
 <body>
 	
@@ -21,8 +40,8 @@
 				<a href="#"><i class='bx bxs-user icon' ></i> Pasien <i class='bx bx-chevron-right icon-right' ></i></a>
 				<ul class="side-dropdown">
 					<li><a href="/dashboard/data_antrian">Antrian</a></li>
-					<li><a href="/dashboard/data_pasien">Data Pasien</a></li>
-					<li><a href="/dashboard/pasien/riwayat">Riwayat Pasien</a></li>
+					<li><a href="#">Data Pasien</a></li>
+					<li><a href="#">Riwayat Pasien</a></li>
 				</ul>
 			</li>
 			<li><a href="/dashboard/data_dokter"><i class='bx bxs-user icon' ></i> Dokter</a></li>
