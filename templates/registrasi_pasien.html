@@ -108,6 +108,13 @@
     
     <label for="username">Username:</label>
     <input type="text" id="username" name="username" required>
+
+    <label for="usia">Usia:</label>
+    <input type="text" id="usia" name="usia" required>
+    
+    <label for="jenis_kelamin">jenis kelamin:</label>
+    <input type="text" id="jenis_kelamin" name="jenis_kelamin" required>
+    
     
     <label for="telpon">Nomor Telepon:</label>
     <input type="tel" id="telpon" name="telpon" required>
@@ -143,9 +150,12 @@
         data: {
           name : $('#nama').val(),
           username : $('#username').val(),
+          usia : $('#usia').val(),
+          jenis_kelamin : $('#jenis_kelamin').val(),
           address : $('#alamat').val(),
           phone : $('#telpon').val(),
           password : $('#password').val()
+          
         },
         success: function(response) {
             // Menampilkan pesan sukses atau kesalahan setelah registrasi

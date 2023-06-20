@@ -12,30 +12,42 @@
 <style>
 
 body {
-    background-image: url("https://cdn.wallpapersafari.com/24/69/qrgVOf.jpg");
+    background-image: url('https://e1.pxfuel.com/desktop-wallpaper/963/596/desktop-wallpaper-backgrounds-dokter-3-background-dokter-thumbnail.jpg');
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background-size: cover;
+    background-position: center;
+
 }
 
 .login-form {
-    width: 340px;
-    margin: 50px auto;
-  	font-size: 15px;
+  width: 340px;
+  margin: 50px auto;
+  font-size: 15px;
+
 }
-.login-form > div {
-    margin-bottom: 15px;
-    background: #f7f7f7;
-    box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.3);
-    padding: 30px;
+
+.bg-light {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
 }
-.login-form h2 {
-    margin: 0 0 15px;
+
+
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
 }
-.form-control, .btn {
-    min-height: 38px;
-    border-radius: 2px;
-}
-.btn {        
-    font-size: 15px;
-    font-weight: bold;
+
+.login-form {
+  width: 340px;
+  margin: 50px;
+  font-size: 15px;
 }
 </style>
 </head>
@@ -47,6 +59,12 @@ body {
             <label for="tanggal">Tanggal Kunjungan:</label>
             <input type="date" class="form-control" id="tanggal" placeholder="date" required="required">
         </div>
+
+        <div class="form-group">
+            <label for="tanggal">keluhan:</label>
+            <input type="text" class="form-control" id="keluhan" placeholder="Keluhan" required="required">
+        </div>
+
         <div class="form-group">
             <label for="dokter">Dokter:</label>
             <select class="form-control" id="dokter" required>
@@ -64,12 +82,12 @@ body {
         </div>        
     </div>
 </div>
-<div class="d-flex justify-content-center bg-light">
+<div class="d-flex justify-bg-light">
     <table class="table table-striped table-hover">
         <thead>
             <tr>
                 <th scope="col">No</th>
-                <th scope="col">Nama</th>
+                <th scope="col">Nama Dokter</th>
                 <th scope="col">Spesialis</th>
                 <th scope="col">Jadwal</th>
             </tr>
@@ -93,9 +111,9 @@ body {
             return alert('Pilih tanggal')
         }
 
-        // if($('#keluhan').val() == ''){
-        //     return alert('Silahkan berkeluh kesah')
-        // }
+        if($('#keluhan').val() == ''){
+            return alert('Silahkan isi keluhan')
+        }
 
         if($('#dokter').val() == ''){
             return alert('Pilih dokter')
@@ -107,7 +125,7 @@ body {
             data:{
                 tanggal: $('#tanggal').val(),
                 id_dokter: $('#dokter').val(),
-                keluhan: ""
+                keluhan: $('#keluhan').val(),
             },
             success: function(data){
                 if(data.result == 'success'){

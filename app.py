@@ -136,6 +136,9 @@ def registrasi_pasien():
     address = request.form['address']
     phone = request.form['phone']
     password = request.form['password']
+    Usia = request.form['usia']
+    jenis_kelamin = request.form['jenis_kelamin']
+
     pw_hash = hashlib.sha256(password.encode('utf-8')).hexdigest()
 
     doc = {
@@ -144,6 +147,8 @@ def registrasi_pasien():
         "address": address,
         "phone": phone,
         "password": pw_hash,
+        'usia' : Usia,
+        "jenis_kelamin" : jenis_kelamin,
     }
     
     # print(doc)
@@ -226,9 +231,9 @@ def booking():
 def riwayat():
     return render_template('halaman_riwayat_.html')
 
-# @app.route('/user')
-# def user():
-#     return render_template('user.html')
+@app.route('/pasien/status')
+def status():
+    return render_template('status_booking.html')
 
 
 @app.route('/dokter/tambah', methods=['POST'])
@@ -334,14 +339,11 @@ def user(username):
     except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
         return redirect(url_for('home'))
     
-
-
 @app.route('/approve_request', methods=['POST'])
 def approve_request():
     request_id = ObjectId(request.form['request_id'])
-    pet_id = ObjectId(request.form['pet_id'])
+    
     db.admin.update_one({'_id': request_id}, {'$set': {'status': 'approved'}})
-    db.pasien.update_one({'_id': pet_id}, {'$set': {'status': True}})
     return redirect(url_for('antrian'))
 
 @app.route('/decline_request', methods=['POST'])
@@ -350,39 +352,22 @@ def decline_request():
     db.request_list.update_one({'_id': request_id}, {'$set': {'status': 'declined'}})
     return redirect(url_for('antrian'))
 
+collection = db['reviews']
 @app.route("/pasien/ulasan", methods=["GET"])
-def ulasan_pasien():
+def ulasan():
     msg = request.args.get("msg")
     return render_template("ulasan_pasien.html", msg=msg)
 
-@app.route("/pasien/ulasan", methods=["GET"])
-def tambah_ulasan():
-    rating = int(request.form["rating"])
-    nama = request.form["nama"]
-    ulasan = request.form["ulasan"]
+@app.route('/pasien/ulasan', methods=['POST'])
+def add_review():
+    name = request.form['name']
+    content = request.form['content']
 
-    # Simpan ulasan ke dalam database MongoDB
-    ulasan_data = {
-        "rating": rating,
-        "nama": nama,
-        "ulasan": ulasan
-    }
-    collection.insert_one(ulasan_data)
+    review = {'name': name, 'content': content}
+    collection.insert_one(review)
 
-    return jsonify({"message": "Ulasan berhasil disimpan"})
-
-@app.route("/pasien/ulasan", methods=["GET"])
-def get_ulasan():
-    ulasan_list = []
-    for ulasan in collection.find():
-        ulasan_list.append({
-            "rating": ulasan["rating"],
-            "nama": ulasan["nama"],
-            "ulasan": ulasan["ulasan"]
-        })
-
-    return jsonify(ulasan_list)
-
+    response = {'result': 'success', 'review': review}
+    return jsonify(response)
 
 @app.route('/book', methods=['POST'])
 def book():

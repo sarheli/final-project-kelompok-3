@@ -78,6 +78,7 @@
                   <th scope="col">Dokter</th>
                   <th scope="col">Tanggal Kunjungan</th>
                   <th scope="col">Jadwal Dokter</th>
+				  <th scope="col">Keluhan</th>
                   <th scope="col">Status</th>
                   <th scope="col">Aksi</th>
                 </tr>
@@ -87,15 +88,17 @@
                 <tr>
 					<th scope="row">{{ data['nomor_antrian'] }}</th>
 					<td>{{ data['pasien']['name'] }}</td>
-					<td>28</td>
-					<td>Laki-laki</td>
+					<td>{{ data['pasien']['usia'] }}</td>
+					<td>{{ data['pasien']['jenis_kelamin'] }}</td>
 					<td>{{ data['dokter']['nama'] }}</td>
 					<td>{{ data['tanggal'] }}</td>
 					<td>{{ data['dokter']['jadwal'] }}</td>
+					<td>{{ data['keluhan'] }}</td>
 					<td>{{ data['status'] }}</td>
 					{% if data['status'] == 'pending' %}
+					
 					<td class="actions">
-						<button class="btn btn-success btn-approve">Approve</button>
+						<button class="btn btn-success btn-approve"onclick="Approve()">Approve</button>
 						<button class="btn btn-danger btn-reject">Reject</button>
 					</td>
 					{% elif data['status'] == 'approved' %}
@@ -151,34 +154,7 @@
 	<script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
 	<script src="/static/script.js"></script>
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-  <script>
-    $(document).ready(function () {
-      // Menangkap tombol approve dan reject
-      $(".btn-approve").click(function () {
-        // Menampilkan pop-up konfirmasi
-        if (confirm("Apakah Anda yakin ingin menyetujui antrian ini?")) {
-          // Mengirim data ke server untuk disimpan (gunakan AJAX atau form submit)
-          $.ajax({
-            type: "POST",
-            url: "url_kirim_data_approve",
-            data: { id: "001" }, // Contoh data yang dikirim
-            success: function (response) {
-              // Tampilkan pesan sukses atau lakukan aksi lain sesuai kebutuhan
-              alert("Data disimpan!");
-            },
-            error: function (xhr, status, error) {
-              // Tampilkan pesan error atau lakukan penanganan error sesuai kebutuhan
-              alert("Terjadi kesalahan saat menyimpan data.");
-            },
-          });
-        }
-      });
 
-      $(".btn-reject").click(function () {
-        // Tidak melakukan apa pun karena data tidak perlu disimpan
-      });
-    });
-  </script>
 </body>
 
 </html>
