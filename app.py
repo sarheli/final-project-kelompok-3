@@ -210,12 +210,11 @@ def medis():
     id_antrian = ObjectId(request.form['booking_id'])
     diagnosa = request.form['diagnosa']
     obat = request.form['obat']
-    
 
     doc = {
         "id_antrian": id_antrian,
         "diagnosa": diagnosa,
-        "obat": obat,
+        "obat": obat
     }
     
     db.rekam_medis.insert_one(doc)
@@ -268,7 +267,7 @@ def booking():
         return redirect(url_for('home'))
 
 
-@app.route('/pasien/riwayat')
+@app.route('/dashboard/pasien/riwayat')
 def riwayat_pasien():
     return render_template('halaman_riwayat_kunjungan.html')
 
@@ -414,23 +413,27 @@ def hasil_pemeriksaan():
     token_receive = request.cookies.get(TOKEN_KEY)
     try:
         payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
-        user_info = db.admin.find_one({'username': payload['id']}, {'_id': False})
-
+        user_info = db.pasien.find_one({'username': payload['id']})
         if payload['role'] != "pasien":
-            return redirect('/pasien/dashboard')
+            return redirect('/dashboard/pasien')
 
         rekam_medis = list(db.rekam_medis.find({}))
+        user_rekam_medis = list()
         for data in rekam_medis:
             data['_id'] = str(data['_id'])
             booking = db.booking.find_one({'_id': data['id_antrian']})
-            data['nama_pasien'] = db.pasien.find_one({'_id' : booking['id_pasien']}, {'name' : True})['name']
+            data['pasien'] =  db.pasien.find_one({'_id' : booking['id_pasien']})
+            data['nama_pasien'] = data['pasien']['name']
             data['nama_dokter'] = db.dokter.find_one({'_id' : booking['id_dokter']})['nama']
             data['tanggal_periksa'] = booking['tanggal']
             data['keluhan'] = booking['keluhan']
-        
-        print(rekam_medis)
+            
+            
+            if(str(data['pasien']['_id']) == str(user_info['_id'])):
+                print(data)
+                user_rekam_medis.append(data)
 
-        return render_template('hasil_pemeriksaan.html', user_info=user_info, rekam_medis=rekam_medis)
+        return render_template('hasil_pemeriksaan.html', user_info=user_info, user_rekam_medis=user_rekam_medis)
     except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
         return redirect(url_for('home'))
   

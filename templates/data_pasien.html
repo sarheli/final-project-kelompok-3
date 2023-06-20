@@ -21,8 +21,8 @@
 				<a href="#"><i class='bx bxs-user icon' ></i> Pasien <i class='bx bx-chevron-right icon-right' ></i></a>
 				<ul class="side-dropdown">
 					<li><a href="/dashboard/data_antrian">Antrian</a></li>
-					<li><a href="#">Data Pasien</a></li>
-					<li><a href="#">Riwayat Pasien</a></li>
+					<li><a href="/dashboard/data_pasien">Data Pasien</a></li>
+					<li><a href="/dashboard/pasien/riwayat">Riwayat Pasien</a></li>
 				</ul>
 			</li>
 			<li><a href="/dashboard/data_dokter"><i class='bx bxs-user icon' ></i> Dokter</a></li>
@@ -72,10 +72,9 @@
 					  <th scope="col">No.</th>
 					  <th scope="col">Nama Pasien</th>
 					  <th scope="col">Tanggal Periksa</th>
-					  <th scope="col">Keluhan</th>
-					  <th scope="col">Diagnosa</th>
-					  <th scope="col">Obat</th>
-					  <th scope="col">Nama Dokter</th>
+					  <th scope="col">Jenis Kelamin</th>
+					  <th scope="col">Alamat</th>
+					  <th scope="col">No.tlp </th>
 					  
 					</tr>
 				  </thead>
@@ -106,36 +105,6 @@
 
 	<script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
 	<script src="/static/script.js"></script>
-	<script>
-	 function rekam_medis(){
-        if($('#tanggal').val() == ''){
-            return alert('Pilih tanggal')
-        }
-
-        if($('#keluhan').val() == ''){
-            return alert('Silahkan isi keluhan')
-        }
-
-        if($('#dokter').val() == ''){
-            return alert('Pilih dokter')
-        }
-
-        $.ajax({
-            method: "POST",
-            url: '/book',
-            data:{
-                tanggal: $('#tanggal').val(),
-                id_dokter: $('#dokter').val(),
-                keluhan: $('#keluhan').val(),
-            },
-            success: function(data){
-                if(data.result == 'success'){
-                    alert('Data booking berhasil dikirim, silahkan tunggu konfirmasi!')
-                    window.location.href = '/pasien/dashboard'
-                }
-            }
-        })
-    }
-</script>
+	
 </body>
 </html>
