@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Ulasan Produk</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-image: url('https://png.pngtree.com/thumb_back/fw800/background/20190221/ourmid/pngtree-physician-day-simple-green-medical-image_35629.jpg');
+            background-size: cover;
+            background-position: center center;
+        }
+
+        h1 {
+            margin-bottom: 20px;
+        }
+
+        form {
+            margin-bottom: 20px;
+        }
+
+        form div {
+            margin-bottom: 10px;
+        }
+
+        label {
+            display: inline-block;
+            width: 80px;
+        }
+
+        input[type="text"],
+        textarea {
+            width: 300px;
+            padding: 5px;
+            text-align: center; /* Menyatukan teks ke tengah secara horizontal */
+        }
+
+        button[type="submit"] {
+            padding: 5px 10px;
+            background-color: #4caf50;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        .review-list {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .review-list li {
+            margin-bottom: 10px;
+        }
+
+    </style>
+</head>
+<body>
+    <h1>Ulasan Produk</h1>
+
+    <form id="review-form">
+        <div>
+            <label for="name">Nama:</label>
+            <input type="text" id="name" name="name" required>
+        </div>
+        <div>
+            <label for="content">Ulasan:</label>
+            <textarea id="content" name="content" required></textarea>
+        </div>
+        <button type="submit">Tambah Ulasan</button>
+    </form>
+
+    <ul class="review-list">
+        {% for review in reviews %}
+        <li>
+            <strong>{{ review['name'] }}</strong>: {{ review['content'] }}
+        </li>
+        {% endfor %}
+    </ul>
+
+    <script>
+        $(document).ready(function() {
+            $('#review-form').submit(function(e) {
+                e.preventDefault();
+
+                var name = $('#name').val();
+                var content = $('#content').val();
+
+                $.ajax({
+                    url: '/pasien/ulasan',
+                    type: 'POST',
+                    data: {
+                        name: name,
+                        content: content
+                    },
+                    success: function(response) {
+                        if (response.result === 'success') {
+                            var review = response.review;
+                            var reviewItem = $('<li></li>').html('<strong>' + review.name + '</strong>: ' + review.content);
+                            $('.review-list').append(reviewItem);
+
+                            $('#name').val('');
+                            $('#content').val('');
+                        }
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
