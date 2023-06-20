@@ -198,7 +198,7 @@ def rekam_medis():
             data['tanggal_periksa'] = booking['tanggal']
             data['keluhan'] = booking['keluhan']
         
-        # print(rekam_medis)
+        print(rekam_medis)
 
         return render_template('rekam_medis.html', user_info=user_info, rekam_medis=rekam_medis)
     except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
@@ -410,7 +410,7 @@ def decline_request():
     return jsonify({'result' : 'success'})
 
 @app.route("/pasien/pemeriksaan")
-def hasil_pemeriksaangin():
+def hasil_pemeriksaan():
     token_receive = request.cookies.get(TOKEN_KEY)
     try:
         payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])

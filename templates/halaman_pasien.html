@@ -10,8 +10,6 @@
     body {
       font-family: Arial, sans-serif;
       background-image: url('https://png.pngtree.com/thumb_back/fw800/background/20190221/ourmid/pngtree-physician-day-simple-green-medical-image_35629.jpg');
-      background-size: cover;
-      background-position: center;
     }
     
     .container {
@@ -104,8 +102,22 @@
       background-color: #0056b3;
     }
   </style>
+
+  <script>
+    function logout() {
+            $.removeCookie('mytoken', { path: '/' });
+            $.removeCookie('role', { path: '/' });
+            alert('Logged out!');
+            window.location.href = "/login"
+        }
+  </script>
 </head>
 <body>
+
+  <div class="d-flex btn-nav" style="margin: 10px;">
+    <a onclick="logout()" class="btn btn-outline-warning logout" >Log Out</a>
+  </div>
+
   <div class="container">
     <div class="welcome-section">
       <h2>Selamat Datang di Halaman Pasien</h2>
