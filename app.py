@@ -342,15 +342,19 @@ def user(username):
 @app.route('/approve_request', methods=['POST'])
 def approve_request():
     request_id = ObjectId(request.form['request_id'])
+<<<<<<< HEAD
     
     db.admin.update_one({'_id': request_id}, {'$set': {'status': 'approved'}})
+=======
+    db.booking.update_one({'_id': request_id}, {'$set': {'status': 'approved'}})
+>>>>>>> c19a6aa06b8d04f5f87a2baddfaa86f8960f6f6c
     return redirect(url_for('antrian'))
 
 @app.route('/decline_request', methods=['POST'])
 def decline_request():
-    request_id = ObjectId(request.form['request_id'])
-    db.request_list.update_one({'_id': request_id}, {'$set': {'status': 'declined'}})
-    return redirect(url_for('antrian'))
+   request_id = ObjectId(request.form['request_id'])
+   db.booking.update_one({'_id': request_id}, {'$set': {'status': 'decline'}})
+   return redirect(url_for('antrian'))
 
 collection = db['reviews']
 @app.route("/pasien/ulasan", methods=["GET"])
