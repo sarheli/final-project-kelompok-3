@@ -1,3 +1,6 @@
+import os
+from os.path import join, dirname
+from dotenv import load_dotenv
 from flask import Flask, render_template, jsonify, request, redirect, url_for
 from pymongo import MongoClient
 from werkzeug.utils import secure_filename
@@ -7,21 +10,28 @@ import datetime
 from datetime import datetime, timedelta
 import hashlib
 
+dotenv_path = join(dirname(__file__), '.env')
+load_dotenv(dotenv_path)
+
+MONGODB_URI = os.environ.get("MONGODB_URI")
+DB_NAME =  os.environ.get("DB_NAME")
+
+client = MongoClient(MONGODB_URI)
+db = client[DB_NAME]
 
 app = Flask(__name__)
 
-client = MongoClient('mongodb+srv://finalproject1290:admin@cluster0.2stcpcn.mongodb.net/?retryWrites=true&w=majority')
-db = client['FINAL3']  
-collection = db["ulasan"]  
 
+# SECRET_KEY = "SPARTA"
+
+
+app = Flask(__name__)
 
 app.config["TEMPLATES_AUTO_RELOAD"] = True
 app.config["UPLOAD_FOLDER"] = "./static/profile_pics"
 
-
 SECRET_KEY = "PROJECTFINAL"
 TOKEN_KEY = "mytoken"
-
 
 @app.route('/')
 def home():
@@ -241,6 +251,8 @@ def pasien():
             data['nama_pasien'] = db.pasien.find_one({'_id' : booking['id_pasien']}, {'name' : True})['name']
             data['nama_dokter'] = db.dokter.find_one({'_id' : booking['id_dokter']})['nama']
             data['tanggal_periksa'] = booking['tanggal']
+          
+        
         print(rekam_medis)
 
         return render_template('data_pasien.html', user_info=user_info, rekam_medis=rekam_medis)
